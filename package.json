@@ -1,0 +1,19 @@
+{
+  "name": "quy-portfolio",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.4.2",
+  "scripts": {
+    "dev": "node scripts/build-pages.cjs && vite dist",
+    "preview": "vite preview --outDir dist",
+    "build": "node scripts/build-pages.cjs",
+    "test": "node --test scripts/case-study.test.cjs",
+    "test:watch": "node --test --watch scripts/case-study.test.cjs",
+    "lint": "node scripts/lint.cjs",
+    "typecheck": "node scripts/typecheck.cjs",
+    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build"
+  },
+  "devDependencies": {
+    "vite": "7.1.7"
+  }
+}

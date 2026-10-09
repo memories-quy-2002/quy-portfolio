@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-labelledby="title">
+  <title id="title">gRPC</title>
+  <rect x="4" y="4" width="40" height="40" rx="10" fill="#e9f3fb"/>
+  <path d="M13 15h7v3h-4v3h4v3h-7zm13 0h8v3h-5v3h4v3h-7zm-6 15h7v3h-7zm10 0h6v3h-6z" fill="#286da4"/>
+  <path d="M16 27v3m18-6v6M22 18v5m4 10h4" fill="none" stroke="#d96848" stroke-width="2" stroke-linecap="round"/>
+</svg>

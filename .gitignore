@@ -1,0 +1,22 @@
+node_modules/
+.sites-runtime/
+dist/
+
+# Local environment files; keep the documented template shareable
+.env*
+!.env.example
+
+# Package manager logs
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Generated Playwright audit artifacts
+output/playwright/*.png
+output/playwright/*.webm
+output/playwright/*.log
+output/playwright/session/

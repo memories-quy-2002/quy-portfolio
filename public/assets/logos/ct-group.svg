@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 112" role="img" aria-labelledby="title">
+  <title id="title">CT Group</title>
+  <g transform="translate(91 3)">
+    <circle cx="29" cy="29" r="25" fill="none" stroke="#1761a5" stroke-width="5" stroke-dasharray="137 22" transform="rotate(-36 29 29)"/>
+    <path d="M10 21h37M7 28h41M13 35h31" fill="none" stroke="#1761a5" stroke-width="4" stroke-linecap="round"/>
+    <path d="M29 14v25" fill="none" stroke="#df423d" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="52" cy="9" r="3.5" fill="#df423d"/>
+  </g>
+  <text x="120" y="83" text-anchor="middle" font-family="Arial, sans-serif" font-size="26" font-weight="700" letter-spacing="1"><tspan fill="#1761a5">CT</tspan><tspan fill="#df423d"> GROUP</tspan></text>
+</svg>
