@@ -416,7 +416,7 @@ html[data-theme="light"] .footer-links a:hover,html[data-theme="light"] .footer-
 .footer-full-name{display:block;margin:13px 0 0;color:var(--ink);font-size:.92rem;font-weight:600;letter-spacing:-.01em}
 .footer-brand p{max-width:290px;margin-top:8px;color:#9aafc0;font-size:.9rem;line-height:1.65}
 .footer-links,.footer-connect{display:flex;flex-direction:column;align-items:flex-start;gap:12px}
-.footer-heading{margin-bottom:3px;color:#7e94a9;font-size:.72rem;font-weight:650;letter-spacing:.11em;text-transform:uppercase}
+.footer-heading{margin-bottom:3px;padding-inline:9px;color:#7e94a9;font-size:.72rem;font-weight:650;letter-spacing:.11em;text-transform:uppercase}
 .footer-links a,.footer-social a{display:inline-flex;align-items:center;gap:10px;color:#c3d0dc;font-size:.86rem;transition:color .2s,translate .2s}
 .footer-links a:hover,.footer-social a:hover{color:var(--accent);translate:2px 0}
 .footer-social{display:grid;gap:12px}
@@ -525,6 +525,14 @@ html[data-theme="light"] .footer-social a,
 html[data-theme="light"] .footer-social .icon,
 html[data-theme="light"] .footer-back-top{color:#304a60}
 html[data-theme="light"] .footer-social img{filter:none}
+
+.back-to-top{position:fixed;right:max(20px,env(safe-area-inset-right));bottom:max(20px,env(safe-area-inset-bottom));z-index:25;display:grid;place-items:center;width:48px;height:48px;border:1px solid #3b566c;border-radius:10px;background:#13263a;color:var(--accent);box-shadow:0 8px 24px #020a1370;opacity:0;visibility:hidden;translate:0 8px;transition:opacity .2s,visibility .2s,translate .2s,background-color .2s,border-color .2s}
+.back-to-top.is-visible{opacity:1;visibility:visible;translate:0 0}
+.back-to-top .icon{width:19px;height:19px;rotate:-45deg}
+.back-to-top:hover{background:#1b3549;border-color:#74e8d1;translate:0 -2px}
+html[data-theme="light"] .back-to-top{background:#fff;border-color:#b8c9d5;color:#087f72;box-shadow:0 8px 24px #17334a24}
+html[data-theme="light"] .back-to-top:hover{background:#e4f4f1;border-color:#4a9d91}
+@media(prefers-reduced-motion:reduce){.back-to-top{transition:none}}
 html[data-theme="light"] .footer-bottom{border-color:#cfdae3}
 html[data-theme="light"] .profile-link:hover{background:#e8f0f4}
 html[data-theme="light"] .architecture-flow{box-shadow:0 12px 35px #17334a0a}
@@ -610,4 +618,35 @@ html .credential-mark.credential-mark-meta,html .credential-mark.credential-mark
 .project-grid.related .project-stage{display:none}
 @media(max-width:600px){
  .project-grid.related{grid-template-columns:minmax(0,1fr);max-width:none}
+}
+
+/* Expand the mobile menu inside the header so it never covers page content. */
+@media(max-width:850px){
+ .header-inner{height:auto;min-height:76px;padding-block:10px;flex-wrap:wrap;gap:8px}
+ .header-controls{margin-left:auto}
+ .site-nav,.site-nav.open{position:static;inset:auto;order:3;flex:0 0 100%;width:100%;margin:0;box-shadow:none}
+ .site-nav.open{display:grid;animation:menu-in .2s var(--ease)}
+ .site-nav:not(.open){display:none}
+ .site-nav{padding:14px 0 8px;background:transparent;border:0}
+ .case-layout{gap:0}
+ .case-nav{position:sticky;top:76px;z-index:20;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;padding:12px 0;gap:8px;background:var(--bg);border-bottom:1px solid var(--line);scrollbar-width:none;overscroll-behavior-inline:contain}
+ .case-nav::-webkit-scrollbar{display:none}
+ .case-nav>.eyebrow{width:auto;flex:none;margin:0 8px 0 0}
+ .case-nav>a{flex:none;white-space:nowrap;align-items:center;padding:8px 10px;border:1px solid var(--line);border-radius:6px;min-height:40px}
+ .case-section{scroll-margin-top:140px}
+}
+@media(max-width:600px){
+ .site-nav{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 8px;padding:14px 0 8px}
+ .site-nav a{min-width:0;padding:10px 8px;gap:8px}
+ .case-nav>a{font-size:12px;gap:8px}
+}
+@media(max-width:360px){
+ .container{width:calc(100% - 28px)}
+ .header-inner{gap:6px}
+ .brand{font-size:1.125rem}
+ .brand-mark{width:30px;height:30px}
+ .brand-label{font-size:1rem}
+ .header-controls{gap:4px}
+ .language-switch button{min-width:40px;padding-inline:5px}
+ .menu-toggle{width:44px;flex:none}
 }

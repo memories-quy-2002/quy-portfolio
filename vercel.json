@@ -1,0 +1,14 @@
+{
+  "redirects": [
+    {
+      "source": "/hero-preview",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/hero-preview/",
+      "destination": "/",
+      "permanent": true
+    }
+  ]
+}

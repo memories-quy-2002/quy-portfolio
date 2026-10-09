@@ -16,6 +16,7 @@ yarn-debug.log*
 Thumbs.db
 
 # Generated Playwright audit artifacts
+.playwright-cli/
 output/playwright/*.png
 output/playwright/*.webm
 output/playwright/*.log

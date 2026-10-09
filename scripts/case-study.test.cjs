@@ -32,8 +32,8 @@ test('case study introductions show a project screenshot before the facts row', 
     assert.ok(heading, `${route} should render a case heading`);
     assert.match(heading, /class="case-hero-visual"/, `${route} should render its hero visual`);
     assert.ok(heading.indexOf(image) < heading.indexOf('class="case-facts"'), `${route} should show its visual before project facts`);
-    assert.match(html, /expressive\.css\?v=44/, `${route} should load the updated visual stylesheet`);
-    assert.match(html, /app\.js\?v=44/, `${route} should load the updated page renderer`);
+    assert.match(html, /expressive\.css\?v=45/, `${route} should load the updated visual stylesheet`);
+    assert.match(html, /app\.js\?v=45/, `${route} should load the updated page renderer`);
   }
 });
 
@@ -211,7 +211,7 @@ test('Footer has clear navigation, social links, and a back-to-top action', () =
   assert.match(html, /linkedin\.com\/in\/memories2002/);
   assert.match(html, /github\.com\/memories-quy-2002/);
   assert.match(html, /href="#header"[^>]*>[\s\S]*?<span>Back to top<\/span>/);
-  assert.match(html, /expressive\.css\?v=44/);
+  assert.match(html, /expressive\.css\?v=45/);
   const css = fs.readFileSync(path.join(root, 'dist', 'expressive.css'), 'utf8');
   assert.match(css, /footer-social a:first-child img\{filter:none\}/);
 });
@@ -221,7 +221,7 @@ test('Theme toggle is available on every route and persists the selected theme',
     const html = page(route);
     assert.match(html, /data-theme-toggle/);
     assert.match(html, /portfolio-theme/);
-    assert.match(html, /expressive\.css\?v=44/);
+    assert.match(html, /expressive\.css\?v=45/);
   }
   const app = fs.readFileSync(path.join(root, 'dist', 'app.js'), 'utf8');
   const home = page('/');
