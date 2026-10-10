@@ -19,6 +19,50 @@ test('case studies open with role, scope, problem and outcome evidence', () => {
   }
 });
 
+test('Food Recipes case study scopes its production pantry evidence to the checked query', () => {
+  const html = page('case-studies/food-recipes');
+  assert.match(html, /searched for “oats” and returned 3 matching recipes/i);
+  assert.doesNotMatch(html, /recipe-feed error|currently reports a database error/i);
+});
+
+test('case-study pages publish a project-specific social preview image', () => {
+  const expectedImages = {
+    'case-studies/digital-e-shop': '/assets/digital-home-1280.webp',
+    'case-studies/food-recipes': '/assets/food-discovery-1280.webp',
+    'case-studies/ecoffee': '/assets/ecoffee-customer-1280.webp',
+  };
+
+  for (const [route, image] of Object.entries(expectedImages)) {
+    assert.match(page(route), new RegExp(`<meta property="og:image" content="https://nguyenquyportfolio\\.vercel\\.app${image.replaceAll('/', '\\/')}"`));
+  }
+});
+
+test('every indexable page publishes one matching Open Graph and Twitter preview image', () => {
+  const routes = [
+    '', 'vi',
+    'projects', 'vi/projects',
+    'tech-stack', 'vi/tech-stack',
+    'experience', 'vi/experience',
+    'education', 'vi/education',
+    'contact', 'vi/contact',
+    'case-studies/digital-e-shop', 'vi/case-studies/digital-e-shop',
+    'case-studies/food-recipes', 'vi/case-studies/food-recipes',
+    'case-studies/ecoffee', 'vi/case-studies/ecoffee',
+  ];
+
+  for (const route of routes) {
+    const html = page(route);
+    const openGraphImages = [...html.matchAll(/<meta property="og:image" content="([^"]+)"/g)].map(([, image]) => image);
+    const twitterImages = [...html.matchAll(/<meta name="twitter:image" content="([^"]+)"/g)].map(([, image]) => image);
+    assert.equal(openGraphImages.length, 1, `${route || '/'} should publish one og:image`);
+    assert.equal(twitterImages.length, 1, `${route || '/'} should publish one twitter:image`);
+    assert.equal(twitterImages[0], openGraphImages[0], `${route || '/'} should use the same image for both platforms`);
+    assert.match(openGraphImages[0], /^https:\/\/nguyenquyportfolio\.vercel\.app\/assets\//, `${route || '/'} should use an absolute production image URL`);
+    const assetPath = new URL(openGraphImages[0]).pathname.slice(1).split('/').join(path.sep);
+    assert.ok(fs.existsSync(path.join(root, 'dist', assetPath)), `${route || '/'} should point to a generated image asset`);
+  }
+});
+
 test('case study introductions show a project screenshot before the facts row', () => {
   const expectedImages = {
     'case-studies/digital-e-shop': '/assets/digital-home.webp',
@@ -210,7 +254,7 @@ test('Footer has clear navigation, social links, and a back-to-top action', () =
   assert.match(html, /class="footer-social"/);
   assert.match(html, /linkedin\.com\/in\/memories2002/);
   assert.match(html, /github\.com\/memories-quy-2002/);
-  assert.match(html, /href="#header"[^>]*>[\s\S]*?<span>Back to top<\/span>/);
+  assert.match(html, /<button id="back-to-top" class="back-to-top"[^>]*aria-label="Back to top"/);
   assert.match(html, /expressive\.css\?v=45/);
   const css = fs.readFileSync(path.join(root, 'dist', 'expressive.css'), 'utf8');
   assert.match(css, /footer-social a:first-child img\{filter:none\}/);

@@ -30,7 +30,7 @@ Project technology and capabilities for Digital E and Food Recipes were checked 
 - Digital E screenshot: https://digital-e.vercel.app/
 - Food Recipes screenshot: https://foodrecipes1.vercel.app/account
 
-The current Food Recipes gallery uses user-provided production captures of recipe discovery and a Banana Oat Pancakes detail screen, with pantry ingredient entry and account access as additional screens. The pantry capture does not show recipe matching results because the recipe feed currently reports a database error. No generated visuals are presented as production screenshots.
+The current Food Recipes gallery uses user-provided production captures of recipe discovery and a Banana Oat Pancakes detail screen, with pantry ingredient entry and account access as additional screens. A public production check on October 10, 2026 searched for “oats” and returned 3 matching recipes; this confirms that query only, and results depend on the live catalog. No generated visuals are presented as production screenshots.
 
 Technology logos: Devicon v2.17.0 (MIT). Interface icons: Lucide (ISC). Licenses are included under public/assets. Brand logos are unmodified; FPT and TMA images are from their official websites.
 
@@ -53,7 +53,7 @@ Home and Projects retain vertical project presentations. Digital E has productio
 
 Case studies have keyboard-operable image galleries and native modal dialogs. Project links use the browser View Transition API for shared image/title transitions where supported, with the existing curtain as fallback. Hero pointer movement is bounded and disabled for touch and reduced motion. Case study navigation tracks the visible chapter. Technology details link to relevant projects; employment details can be expanded.
 
-Checks: all nine routes rendered in both languages and local links/assets validated. DOM-level interaction checks cover gallery selection, modal navigation and cleanup, focus return, bilingual captions, shared-transition completion, and rapid navigation cancellation. Browser screenshots of the current portfolio could not be captured because the preview address was blocked by the cloud browser. These checks do not prove responsive visual quality or native browser animation behavior.
+Automated `pnpm test` checks generated route markup, case-study content and evidence, local technology assets, and selected CSS contracts. It does not automate gallery, modal, focus-return, or navigation-transition behavior. A manual browser review on October 10, 2026 covered mobile navigation at 390 px, direct Vietnamese routing, and desktop layout at 1280 px and 1440 px; the 1280 px artwork overflow was corrected in the stylesheet. These manual checks do not replace repeatable browser journeys or prove native animation behavior across browsers.
 
 Further design reference: https://bruno-simon.com/ (interactive portfolio experience) and https://brittanychiang.com/ (project/experience context). No reference site imagery or source was copied.
 

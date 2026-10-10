@@ -121,18 +121,34 @@ function renderPage(route, contentRoute = route, language = 'en') {
   const vietnameseRoute = `/vi${contentRoute}`;
   const alternateMetadata = route === notFoundRoute ? ''
     : `<link rel="alternate" hreflang="en" href="${baseUrl}${contentRoute}"><link rel="alternate" hreflang="vi-VN" href="${baseUrl}${vietnameseRoute}"><link rel="alternate" hreflang="x-default" href="${baseUrl}${contentRoute}">`;
-  const homeSocialImage = `${baseUrl}/assets/hero-ring-v2-1280.webp`;
-  const homeSocialImageAlt = language === 'vi'
-    ? 'Hình khối trừu tượng màu xanh ngọc và bạc đại diện cho portfolio kỹ sư phần mềm của Nguyễn Mạnh Phú Quý'
-    : "Abstract teal and silver sculpture representing Nguyễn Mạnh Phú Quý's software engineering portfolio";
-  const homeSocialMetadata = contentRoute === '/'
-    ? `${socialUrlMetadata}<meta property="og:image" content="${homeSocialImage}"><meta property="og:image:type" content="image/webp"><meta property="og:image:alt" content="${homeSocialImageAlt}"><meta name="twitter:image" content="${homeSocialImage}">`
-    : socialUrlMetadata;
+  const caseStudySocialImages = {
+    '/case-studies/digital-e-shop/': {
+      src: '/assets/digital-home-1280.webp',
+      alt: ['Digital E production storefront', 'Giao diện cửa hàng production của Digital E'],
+    },
+    '/case-studies/food-recipes/': {
+      src: '/assets/food-discovery-1280.webp',
+      alt: ['Food Recipes recipe discovery screen', 'Màn hình khám phá công thức của Food Recipes'],
+    },
+    '/case-studies/ecoffee/': {
+      src: '/assets/ecoffee-customer-1280.webp',
+      alt: ['eCoffee customer storefront', 'Giao diện khách hàng eCoffee'],
+    },
+  };
+  const socialImage = caseStudySocialImages[contentRoute] || {
+    src: '/assets/hero-ring-v2-1280.webp',
+    alt: [
+      "Abstract teal and silver sculpture representing Nguyễn Mạnh Phú Quý's software engineering portfolio",
+      'Hình khối trừu tượng màu xanh ngọc và bạc đại diện cho portfolio kỹ sư phần mềm của Nguyễn Mạnh Phú Quý',
+    ],
+  };
+  const socialImageUrl = `${baseUrl}${socialImage.src}`;
+  const socialImageMetadata = `${socialUrlMetadata}<meta property="og:image" content="${socialImageUrl}"><meta property="og:image:type" content="image/webp"><meta property="og:image:alt" content="${socialImage.alt[language === 'vi' ? 1 : 0]}">`;
   const structuredData = contentRoute === '/'
     ? `<script type="application/ld+json">${JSON.stringify(personSchema)}</script>`
     : '';
 
-  return `<!doctype html>\n<html lang="${language}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b1422"><meta name="author" content="Nguyễn Mạnh Phú Quý"><meta name="robots" content="${robots}"><meta name="description" content="${pageDescription}">${canonicalMetadata}${alternateMetadata}<meta property="og:type" content="${socialType}"><meta property="og:locale" content="${language === 'vi' ? 'vi_VN' : 'en_US'}"><meta property="og:title" content="${pageTitle}"><meta property="og:description" content="${pageDescription}">${homeSocialMetadata}<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${pageTitle}"><meta name="twitter:description" content="${pageDescription}">${structuredData}<script>try{const savedTheme=localStorage.getItem('portfolio-theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme;}catch{}</script><title>${pageTitle}</title><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>${fontStylesheetLink}<link rel="stylesheet" href="/styles.css?v=45"><link rel="stylesheet" href="/expressive.css?v=45"><script src="/content.js?v=45" defer></script><script src="/motion.js?v=45" defer></script><script src="/app.js?v=45" defer></script></head><body><a class="skip-link" href="#main">Skip to main content</a><header id="header">${elements.header.innerHTML}</header><main id="main" class="page-shell" tabindex="-1">${elements.main.innerHTML}</main><footer id="footer">${elements.footer.innerHTML}</footer><button id="back-to-top" class="back-to-top" type="button" aria-label="${language === 'vi' ? 'Lên đầu trang' : 'Back to top'}" title="${language === 'vi' ? 'Lên đầu trang' : 'Back to top'}"><span class="icon" style="--icon:url('/assets/icons/move-up-right.svg')" aria-hidden="true"></span></button></body></html>\n`;
+  return `<!doctype html>\n<html lang="${language}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b1422"><meta name="author" content="Nguyễn Mạnh Phú Quý"><meta name="robots" content="${robots}"><meta name="description" content="${pageDescription}">${canonicalMetadata}${alternateMetadata}<meta property="og:type" content="${socialType}"><meta property="og:locale" content="${language === 'vi' ? 'vi_VN' : 'en_US'}"><meta property="og:title" content="${pageTitle}"><meta property="og:description" content="${pageDescription}">${socialImageMetadata}<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${pageTitle}"><meta name="twitter:description" content="${pageDescription}"><meta name="twitter:image" content="${socialImageUrl}">${structuredData}<script>try{const savedTheme=localStorage.getItem('portfolio-theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme;}catch{}</script><title>${pageTitle}</title><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>${fontStylesheetLink}<link rel="stylesheet" href="/styles.css?v=45"><link rel="stylesheet" href="/expressive.css?v=45"><script src="/content.js?v=45" defer></script><script src="/motion.js?v=45" defer></script><script src="/app.js?v=45" defer></script></head><body><a class="skip-link" href="#main">Skip to main content</a><header id="header">${elements.header.innerHTML}</header><main id="main" class="page-shell" tabindex="-1">${elements.main.innerHTML}</main><footer id="footer">${elements.footer.innerHTML}</footer><button id="back-to-top" class="back-to-top" type="button" aria-label="${language === 'vi' ? 'Lên đầu trang' : 'Back to top'}" title="${language === 'vi' ? 'Lên đầu trang' : 'Back to top'}"><span class="icon" style="--icon:url('/assets/icons/move-up-right.svg')" aria-hidden="true"></span></button></body></html>\n`;
 }
 
 function writePage(route, contentRoute = route, language = 'en') {

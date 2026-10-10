@@ -104,7 +104,7 @@ const caseEvidence={
   role:['Full-stack developer · Personal project','Lập trình viên full-stack · Dự án cá nhân'],
   scope:['React application state and recipe workflows; versioned NestJS API, authentication, and persistence.','State ứng dụng React và luồng công thức; API NestJS có version, xác thực và lưu trữ dữ liệu.'],
   outcome:['Delivered connected recipe, meal-planning, shopping, pantry, and household workflows through a separately deployed frontend and API.','Hoàn thiện các luồng công thức, kế hoạch bữa ăn, mua sắm, kho bếp và hộ gia đình; frontend và API được triển khai riêng.'],
-  verification:[['The repository README separates mocked browser journeys from real API and database acceptance checks.','Production captures show recipe discovery and recipe details; the pantry capture discloses its recipe-feed error.'],['README phân biệt hành trình browser dùng mock với acceptance test trên API và cơ sở dữ liệu thật.','Ảnh production thể hiện khám phá và chi tiết công thức; ảnh kho bếp công khai rõ lỗi recipe feed.']]
+   verification:[['The repository README separates mocked browser journeys from real API and database acceptance checks.','A public production check on October 10, 2026 searched for “oats” and returned 3 matching recipes. That confirms this query only; results depend on the live catalog.'],['README phân biệt hành trình browser dùng mock với acceptance test trên API và cơ sở dữ liệu thật.','Kiểm tra production ngày 10/10/2026 với “oats” trả về 3 công thức phù hợp. Kết quả này chỉ xác nhận truy vấn đó và còn phụ thuộc vào danh mục trực tuyến.']]
  },
  ecoffee:{
   role:['Backend contributor · Team project','Thành viên backend · Dự án nhóm'],

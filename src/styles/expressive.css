@@ -575,6 +575,7 @@ html[data-theme="light"] .case-section .feature-grid>div{color:var(--ink);backgr
 
 /* The transparent sculpture cutout gets its depth from the page rather than a baked black panel. */
 .hero-art{position:relative;isolation:isolate}
+@media(min-width:851px) and (max-width:1399px){.hero-art{margin-right:-25px}}
 .hero-art:before{content:"";position:absolute;z-index:-1;inset:12% 12% 8%;border-radius:50%;background:radial-gradient(ellipse at 50% 48%,#6ddbc944 0%,#6c9acb20 46%,transparent 76%);filter:blur(30px);pointer-events:none}
 .hero-art .sculpture-control{color:var(--ink)}
 .hero-art .sculpture-control img{display:block;width:100%;height:auto;min-height:0;aspect-ratio:1.5;object-fit:contain;mask-image:none;animation:ring-drift 10s ease-in-out infinite}
