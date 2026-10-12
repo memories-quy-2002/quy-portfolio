@@ -48,7 +48,7 @@ const label = text => `<div class="eyebrow">${text}</div>`;
 const tagIconMap = {'UAV':'cpu','Solution architecture':'layers','Technical specifications':'code-xml','Frontend':'monitor','Git':'code-xml'};
 const tags = values => `<div class="tags">${values.map(value => `<span data-tag="${value}">${logoMap[value]?`<img class="tech-logo tech-logo-${logoMap[value]}" src="/assets/logos/${logoMap[value]}.svg" alt="" width="${value==='PayOS'?44:18}" height="18" loading="lazy" decoding="async">`:tagIconMap[value]?icon(tagIconMap[value],'tag-icon'):''}${value}</span>`).join('')}</div>`;
 const button = (href, text, primary = false, attributes = '') => {
- const email=href==='/contact/'?contactEmail():null;
+ const email=href.startsWith('mailto:')?contactEmail():null;
  const target=email?`mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(pick(['Portfolio inquiry','Liên hệ từ portfolio']))}`:href.startsWith('/')&&!href.startsWith('//')&&!href.startsWith('/assets/')?localizePath(href):href;
  const labelText=email?t('emailMe'):text;
  return `<a class="button ${primary ? 'primary' : ''}" href="${target}" ${attributes}>${icon(target.startsWith('mailto:')?'mail':href.includes('github.com')?'code-xml':href.includes('linkedin.com')?'briefcase-business':href.startsWith('https')?'globe':href.includes('project')?'layers':href.includes('contact')?'mail':href.includes('tech')?'cpu':'book-open')}<span>${labelText}</span></a>`;
@@ -75,7 +75,7 @@ function architectureIntegration(item){const mark=item.brand?logo(item.brand,'in
 function architecture(project,compact=false){
  const flow=projectFlows[project.id];if(!flow)return '';
  const nodes=flow.nodes.map((node,index)=>`${architectureNode(node,index)}${index<flow.edges.length?architectureConnector(flow.edges[index]):''}`).join('');
- const source=flow.source?`<a class="architecture-source" href="${flow.source}" target="_blank" rel="noopener noreferrer">${pick(['Repository source ↗','Source repository ↗'])}</a>`:'';
+ const source=flow.source?`<a class="architecture-source" href="${flow.source}" target="_blank" rel="noopener noreferrer">${pick(['Source repository ↗','Kho mã nguồn ↗'])}</a>`:'';
  const integrations=flow.integrations?.length?`<section class="architecture-support"><h3>${pick(flow.supportLabel)}</h3><div class="architecture-integrations">${flow.integrations.map(architectureIntegration).join('')}</div></section>`:'';
  const events=flow.events?`<section class="architecture-event-model"><div class="event-model-heading"><div><span class="integration-kind">${pick(flow.events.label)}</span><h3>${pick(flow.events.title)}</h3></div><span class="event-model-status">${pick(flow.events.status)}</span></div><div class="event-model-track">${flow.events.steps.map((step,index)=>`${index?`<div class="event-model-connector"><span>${escapeText(pick(flow.events.edges[index-1]))}</span><i aria-hidden="true">→</i></div>`:''}<article class="event-model-step">${step.brand?logo(step.brand,'event-model-brand'):icon(step.icon||'database','event-model-brand integration-generic')}<h4>${escapeText(pick(step.title))}</h4></article>`).join('')}</div><p class="event-model-footnote">${pick(flow.events.footnote)}</p></section>`:'';
  const serviceFacts=flow.facts?`<div class="architecture-facts">${flow.facts.map(fact=>`<span>${fact.icon?icon(fact.icon):''}<span>${pick(fact.text)}</span></span>`).join('')}</div>`:'';
