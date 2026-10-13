@@ -9,7 +9,6 @@
  let stages=[];
  let hero;
  let heroRegion;
- let sculptureAnimation;
  let pointer={x:0,y:0};
  let sharedTransition;
  const canAnimate=()=>!preference.matches&&typeof Element.prototype.animate==='function';
@@ -62,16 +61,13 @@
  }
  function resetHero(){if(hero)for(const property of ['--hero-x','--hero-y','--hero-rx','--hero-ry','--hero-shift'])hero.style.removeProperty(property);pointer={x:0,y:0};}
  function refresh(root){
-  sculptureAnimation?.cancel();sculptureAnimation=null;
   resetHero();stages=[...root.querySelectorAll('.project-stage')];hero=root.querySelector('.hero-art');heroRegion=root.querySelector('.hero');
-  const control=hero?.querySelector('.sculpture-control');
-  if(control){control.disabled=preference.matches;control.addEventListener('click',()=>{
-   if(preference.matches)return;
-   const image=control.querySelector('img');if(!image?.animate)return;
-   sculptureAnimation?.cancel();
-   // Animate the image independently of its pointer-driven outer container.
-   sculptureAnimation=image.animate([{transform:'rotate(0deg) scale(1)'},{transform:'rotate(180deg) scale(1.045)',offset:.5},{transform:'rotate(360deg) scale(1)'}],{duration:1500,easing:'cubic-bezier(.45,0,.2,1)'});
-  });}
+  const nodes=[...hero?.querySelectorAll('[data-system-node]')||[]];
+  const detail=hero?.querySelector('[data-system-detail]');
+  nodes.forEach(node=>node.addEventListener('click',()=>{
+   nodes.forEach(item=>item.setAttribute('aria-pressed',String(item===node)));
+   if(detail)detail.textContent=node.dataset.detail||node.querySelector('strong')?.textContent||'';
+  }));
   if(preference.matches){stages.forEach(stage=>stage.style.removeProperty('--scroll-lift'));hero?.style.removeProperty('--hero-shift');return;}
   schedule();
  }
@@ -86,6 +82,6 @@
  window.addEventListener('pointermove',event=>{if(preference.matches||event.pointerType!=='mouse'||!heroRegion)return;const r=heroRegion.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom){pointer={x:0,y:0};}else pointer={x:(event.clientX-r.left)/r.width*2-1,y:(event.clientY-r.top)/r.height*2-1};schedule();},{passive:true});
  window.addEventListener('blur',()=>{resetHero();});
  window.addEventListener('scroll',schedule,{passive:true});window.addEventListener('resize',schedule,{passive:true});
- preference.addEventListener?.('change',()=>{if(hero?.querySelector('.sculpture-control'))hero.querySelector('.sculpture-control').disabled=preference.matches;if(preference.matches){sculptureAnimation?.cancel();cancel();if(frame)cancelAnimationFrame(frame);frame=0;stages.forEach(stage=>stage.style.removeProperty('--scroll-lift'));resetHero();}else schedule();});
+ preference.addEventListener?.('change',()=>{if(preference.matches){cancel();if(frame)cancelAnimationFrame(frame);frame=0;stages.forEach(stage=>stage.style.removeProperty('--scroll-lift'));resetHero();}else schedule();});
  window.PortfolioMotion={transition,projectTransition,cancel,refresh};
 })();
