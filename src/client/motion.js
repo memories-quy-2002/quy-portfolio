@@ -60,14 +60,94 @@
   finally{touched.forEach(element=>element.style.removeProperty('view-transition-name'));if(id===run){sharedTransition=null;document.getElementById('main').classList.remove('shared-entry');}}
  }
  function resetHero(){if(hero)for(const property of ['--hero-x','--hero-y','--hero-rx','--hero-ry','--hero-shift'])hero.style.removeProperty(property);pointer={x:0,y:0};}
+ let orbitFrame=0;
+ let orbitObserver;
+ let orbitContext;
+ function stopOrbit(){
+  if(orbitFrame)cancelAnimationFrame(orbitFrame);
+  orbitFrame=0;orbitObserver?.disconnect();orbitObserver=null;orbitContext=null;
+ }
+ function scheduleOrbit(){
+  if(orbitFrame||!orbitContext||!orbitContext.visible||document.hidden)return;
+  orbitFrame=requestAnimationFrame(drawOrbit);
+ }
+ function drawOrbit(now){
+  orbitFrame=0;
+  const context=orbitContext;
+  if(!context||!context.visible||document.hidden)return;
+  if(!preference.matches)context.elapsed+=Math.min(.06,Math.max(0,(now-context.last)/1000));
+  context.last=now;
+  const rect=context.visual.getBoundingClientRect(),width=rect.width,height=rect.height;
+  const planes=[
+   {tilt:.13,turn:-.18,speed:.105,tiltY:0},
+   {tilt:.58,turn:.49,speed:.132,tiltY:.12},
+   {tilt:-.55,turn:-.62,speed:-.094,tiltY:-.14}
+  ];
+  const yaw=context.yaw+context.hoverYaw,pitch=context.pitch+context.hoverPitch;
+  context.visual.style.setProperty('--orbit-tilt-x',`${(pitch*180/Math.PI).toFixed(2)}deg`);
+  context.visual.style.setProperty('--orbit-tilt-y',`${(yaw*180/Math.PI).toFixed(2)}deg`);
+  context.nodes.forEach(({element,plane,phase,radius,speed})=>{
+   const path=planes[plane]||planes[0],angle=phase+context.elapsed*speed;
+   let x=Math.cos(angle),y=Math.sin(angle),z=0;
+   const yt=y*Math.cos(path.tilt),zt=y*Math.sin(path.tilt);
+   const xr=x*Math.cos(path.turn)-yt*Math.sin(path.turn);
+   const yr=x*Math.sin(path.turn)+yt*Math.cos(path.turn);
+   x=xr;y=yr;z=zt;
+   const px=x*Math.cos(path.tiltY)+z*Math.sin(path.tiltY);
+   z=-x*Math.sin(path.tiltY)+z*Math.cos(path.tiltY);x=px;
+   const yawX=x*Math.cos(yaw)+z*Math.sin(yaw);
+   const yawZ=-x*Math.sin(yaw)+z*Math.cos(yaw);
+   const pitchY=y*Math.cos(pitch)-yawZ*Math.sin(pitch);
+   const depth=y*Math.sin(pitch)+yawZ*Math.cos(pitch);
+   element.style.setProperty('--node-x',`${(yawX*radius*width).toFixed(2)}px`);
+   element.style.setProperty('--node-y',`${(pitchY*radius*height).toFixed(2)}px`);
+   element.style.setProperty('--node-scale',(1+depth*.075).toFixed(3));
+   element.style.setProperty('--node-depth',String(10+Math.round(depth*22)));
+  });
+  if(!preference.matches)orbitFrame=requestAnimationFrame(drawOrbit);
+ }
+ function bindOrbit(visual,nodes){
+  stopOrbit();
+  if(!visual||!nodes.length)return;
+  const context=orbitContext={visual,nodes:nodes.map(element=>({element,plane:Number(element.dataset.orbitPlane)||0,phase:Number(element.dataset.orbitPhase)||0,radius:Number(element.dataset.orbitRadius)||.405,speed:Number(element.dataset.orbitSpeed)||.1})),elapsed:0,last:performance.now(),visible:!('IntersectionObserver'in window),yaw:0,pitch:0,hoverYaw:0,hoverPitch:0,dragging:false,lastX:0,lastY:0};
+  visual.classList.remove('is-dragging');
+  visual.addEventListener('pointerdown',event=>{
+   if(event.target.closest('[data-orbit-node]')||(event.pointerType==='mouse'&&event.button!==0))return;
+   context.dragging=true;context.lastX=event.clientX;context.lastY=event.clientY;visual.classList.add('is-dragging');
+   try{visual.setPointerCapture(event.pointerId);}catch{/* Continue without pointer capture if unsupported. */}
+   event.preventDefault();
+  });
+  visual.addEventListener('pointermove',event=>{
+   const bounds=visual.getBoundingClientRect();
+   if(context.dragging){
+    const dx=event.clientX-context.lastX,dy=event.clientY-context.lastY;context.lastX=event.clientX;context.lastY=event.clientY;
+    context.yaw=(context.yaw+dx*Math.PI*2/Math.max(1,bounds.width))%(Math.PI*2);
+    context.pitch=Math.max(-1.12,Math.min(1.12,context.pitch+dy*Math.PI/Math.max(1,bounds.height)));
+    context.hoverYaw=0;context.hoverPitch=0;scheduleOrbit();
+   }else if(event.pointerType==='mouse'){
+    context.hoverYaw=((event.clientX-bounds.left)/Math.max(1,bounds.width)-.5)*.28;
+    context.hoverPitch=(.5-(event.clientY-bounds.top)/Math.max(1,bounds.height))*.22;scheduleOrbit();
+   }
+  },{passive:true});
+  const endDrag=event=>{
+   context.dragging=false;visual.classList.remove('is-dragging');
+   if(event?.pointerId!==undefined){try{if(visual.hasPointerCapture(event.pointerId))visual.releasePointerCapture(event.pointerId);}catch{/* Pointer capture may already be released. */}}
+  };
+  visual.addEventListener('pointerup',endDrag);visual.addEventListener('pointercancel',endDrag);visual.addEventListener('lostpointercapture',()=>{context.dragging=false;visual.classList.remove('is-dragging');});
+  visual.addEventListener('pointerleave',event=>{if(event.pointerType==='mouse'&&!context.dragging){context.hoverYaw=0;context.hoverPitch=0;scheduleOrbit();}});
+  if('IntersectionObserver'in window){orbitObserver=new IntersectionObserver(entries=>{const entry=entries[0];if(!entry)return;context.visible=entry.isIntersecting;if(context.visible){context.last=performance.now();scheduleOrbit();}else if(orbitFrame){cancelAnimationFrame(orbitFrame);orbitFrame=0;}},{threshold:.08});orbitObserver.observe(visual);}
+  scheduleOrbit();
+ }
  function refresh(root){
   resetHero();stages=[...root.querySelectorAll('.project-stage')];hero=root.querySelector('.hero-art');heroRegion=root.querySelector('.hero');
-  const nodes=[...hero?.querySelectorAll('[data-system-node]')||[]];
-  const detail=hero?.querySelector('[data-system-detail]');
+  const visual=root.querySelector('[data-system-visual]');
+  const nodes=[...visual?.querySelectorAll('[data-system-node]')||[]];
+  const detail=root.querySelector('[data-system-detail]');
   nodes.forEach(node=>node.addEventListener('click',()=>{
    nodes.forEach(item=>item.setAttribute('aria-pressed',String(item===node)));
    if(detail)detail.textContent=node.dataset.detail||node.querySelector('strong')?.textContent||'';
   }));
+  bindOrbit(visual,nodes);
   if(preference.matches){stages.forEach(stage=>stage.style.removeProperty('--scroll-lift'));hero?.style.removeProperty('--hero-shift');return;}
   schedule();
  }
@@ -82,6 +162,8 @@
  window.addEventListener('pointermove',event=>{if(preference.matches||event.pointerType!=='mouse'||!heroRegion)return;const r=heroRegion.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom){pointer={x:0,y:0};}else pointer={x:(event.clientX-r.left)/r.width*2-1,y:(event.clientY-r.top)/r.height*2-1};schedule();},{passive:true});
  window.addEventListener('blur',()=>{resetHero();});
  window.addEventListener('scroll',schedule,{passive:true});window.addEventListener('resize',schedule,{passive:true});
+ document.addEventListener('visibilitychange',()=>{if(document.hidden){if(orbitFrame)cancelAnimationFrame(orbitFrame);orbitFrame=0;}else{if(orbitContext)orbitContext.last=performance.now();scheduleOrbit();schedule();}});
  preference.addEventListener?.('change',()=>{if(preference.matches){cancel();if(frame)cancelAnimationFrame(frame);frame=0;stages.forEach(stage=>stage.style.removeProperty('--scroll-lift'));resetHero();}else schedule();});
  window.PortfolioMotion={transition,projectTransition,cancel,refresh};
 })();
+
