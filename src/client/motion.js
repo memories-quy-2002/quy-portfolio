@@ -143,9 +143,13 @@
   const visual=root.querySelector('[data-system-visual]');
   const nodes=[...visual?.querySelectorAll('[data-system-node]')||[]];
   const detail=root.querySelector('[data-system-detail]');
+  const detailTitle=detail?.querySelector('[data-system-detail-title]');
+  const detailCopy=detail?.querySelector('[data-system-detail-copy]');
   nodes.forEach(node=>node.addEventListener('click',()=>{
    nodes.forEach(item=>item.setAttribute('aria-pressed',String(item===node)));
-   if(detail)detail.textContent=node.dataset.detail||node.querySelector('strong')?.textContent||'';
+   if(detailTitle)detailTitle.textContent=node.getAttribute('aria-label')||'';
+   if(detailCopy)detailCopy.textContent=node.dataset.detail||'';
+   if(detail){detail.dataset.state='selected';detail.classList.add('is-open');}
   }));
   bindOrbit(visual,nodes);
   if(preference.matches){stages.forEach(stage=>stage.style.removeProperty('--scroll-lift'));hero?.style.removeProperty('--hero-shift');return;}
