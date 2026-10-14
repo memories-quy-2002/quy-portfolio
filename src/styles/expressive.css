@@ -1152,3 +1152,8 @@ html[data-theme="light"] body{
 }
 
 .page-shell.has-client-navigated .hero-copy,.page-shell.has-client-navigated .hero-art{animation:none!important}
+
+/* Give the TMA mark the same white tile in both color themes. */
+.experience-top .company-mark-tma{background:#fff;border-color:#d5e1ec}
+/* The source wordmark is white; darken it for contrast on the white tile. */
+.experience-top .company-mark-tma img{filter:brightness(.42) saturate(1.2) contrast(1.08)}
