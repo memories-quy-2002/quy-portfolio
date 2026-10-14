@@ -84,8 +84,8 @@
    {tilt:-.55,turn:-.62,speed:-.094,tiltY:-.14}
   ];
   const yaw=context.yaw+context.hoverYaw,pitch=context.pitch+context.hoverPitch;
-  context.visual.style.setProperty('--orbit-tilt-x',\`\${(pitch*180/Math.PI).toFixed(2)}deg\`);
-  context.visual.style.setProperty('--orbit-tilt-y',\`\${(yaw*180/Math.PI).toFixed(2)}deg\`);
+  context.visual.style.setProperty('--orbit-tilt-x',`${(pitch*180/Math.PI).toFixed(2)}deg`);
+  context.visual.style.setProperty('--orbit-tilt-y',`${(yaw*180/Math.PI).toFixed(2)}deg`);
   context.nodes.forEach(({element,plane,phase,radius,speed})=>{
    const path=planes[plane]||planes[0],angle=phase+context.elapsed*speed;
    let x=Math.cos(angle),y=Math.sin(angle),z=0;
@@ -99,8 +99,8 @@
    const yawZ=-x*Math.sin(yaw)+z*Math.cos(yaw);
    const pitchY=y*Math.cos(pitch)-yawZ*Math.sin(pitch);
    const depth=y*Math.sin(pitch)+yawZ*Math.cos(pitch);
-   element.style.setProperty('--node-x',\`\${(yawX*radius*width).toFixed(2)}px\`);
-   element.style.setProperty('--node-y',\`\${(pitchY*radius*height).toFixed(2)}px\`);
+   element.style.setProperty('--node-x',`${(yawX*radius*width).toFixed(2)}px`);
+   element.style.setProperty('--node-y',`${(pitchY*radius*height).toFixed(2)}px`);
    element.style.setProperty('--node-scale',(1+depth*.075).toFixed(3));
    element.style.setProperty('--node-depth',String(10+Math.round(depth*22)));
   });
