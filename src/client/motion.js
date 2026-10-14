@@ -78,14 +78,24 @@
   if(!preference.matches)context.elapsed+=Math.min(.06,Math.max(0,(now-context.last)/1000));
   context.last=now;
   const rect=context.visual.getBoundingClientRect(),width=rect.width,height=rect.height;
+  if(!width||!height)return;
+  const canvas=context.connectionCanvas,canvasContext=context.connectionContext;
+  const pixelRatio=Math.min(2,window.devicePixelRatio||1);
+  if(canvas&&canvasContext){
+   const pixelWidth=Math.max(1,Math.round(width*pixelRatio)),pixelHeight=Math.max(1,Math.round(height*pixelRatio));
+   if(canvas.width!==pixelWidth||canvas.height!==pixelHeight){canvas.width=pixelWidth;canvas.height=pixelHeight;}
+   canvasContext.setTransform(pixelRatio,0,0,pixelRatio,0,0);
+   canvasContext.clearRect(0,0,width,height);
+  }
   const planes=[
    {tilt:.13,turn:-.18,speed:.105,tiltY:0},
    {tilt:.58,turn:.49,speed:.132,tiltY:.12},
    {tilt:-.55,turn:-.62,speed:-.094,tiltY:-.14}
   ];
   const yaw=context.yaw+context.hoverYaw,pitch=context.pitch+context.hoverPitch;
-  context.visual.style.setProperty('--orbit-tilt-x',`${(pitch*180/Math.PI).toFixed(2)}deg`);
-  context.visual.style.setProperty('--orbit-tilt-y',`${(yaw*180/Math.PI).toFixed(2)}deg`);
+  context.visual.style.setProperty('--orbit-tilt-x',(pitch*180/Math.PI).toFixed(2)+'deg');
+  context.visual.style.setProperty('--orbit-tilt-y',(yaw*180/Math.PI).toFixed(2)+'deg');
+  const positions=[];
   context.nodes.forEach(({element,plane,phase,radius,speed})=>{
    const path=planes[plane]||planes[0],angle=phase+context.elapsed*speed;
    let x=Math.cos(angle),y=Math.sin(angle),z=0;
@@ -99,17 +109,53 @@
    const yawZ=-x*Math.sin(yaw)+z*Math.cos(yaw);
    const pitchY=y*Math.cos(pitch)-yawZ*Math.sin(pitch);
    const depth=y*Math.sin(pitch)+yawZ*Math.cos(pitch);
-   element.style.setProperty('--node-x',`${(yawX*radius*width).toFixed(2)}px`);
-   element.style.setProperty('--node-y',`${(pitchY*radius*height).toFixed(2)}px`);
+   const nodeX=yawX*radius*width,nodeY=pitchY*radius*height;
+   element.style.setProperty('--node-x',nodeX.toFixed(2)+'px');
+   element.style.setProperty('--node-y',nodeY.toFixed(2)+'px');
    element.style.setProperty('--node-scale',(1+depth*.075).toFixed(3));
    element.style.setProperty('--node-depth',String(10+Math.round(depth*22)));
+   positions.push({x:width/2+nodeX,y:height/2+nodeY,depth});
   });
+  if(canvasContext&&positions.length>1){
+   const edges=[[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[0,3],[1,4],[2,5]];
+   canvasContext.save();
+   canvasContext.lineCap='round';
+   canvasContext.lineWidth=1.25;
+   edges.forEach(([from,to])=>{
+    const a=positions[from],b=positions[to];
+    if(!a||!b)return;
+    const visibility=.72+((a.depth+b.depth+2)*.07);
+    const gradient=canvasContext.createLinearGradient(a.x,a.y,b.x,b.y);
+    gradient.addColorStop(0,'rgba(91, 242, 220,'+(.36*visibility)+')');
+    gradient.addColorStop(1,'rgba(119, 204, 255,'+(.27*visibility)+')');
+    canvasContext.strokeStyle=gradient;
+    canvasContext.shadowColor='rgba(78, 233, 218, 0.4)';
+    canvasContext.shadowBlur=7;
+    canvasContext.setLineDash([]);
+    canvasContext.beginPath();
+    canvasContext.moveTo(a.x,a.y);
+    canvasContext.lineTo(b.x,b.y);
+    canvasContext.stroke();
+    canvasContext.strokeStyle='rgba(190, 255, 249,'+(.5*visibility)+')';
+    canvasContext.lineWidth=1;
+    canvasContext.setLineDash([2,8]);
+    canvasContext.lineDashOffset=-(context.elapsed*16)%10;
+    canvasContext.shadowBlur=4;
+    canvasContext.beginPath();
+    canvasContext.moveTo(a.x,a.y);
+    canvasContext.lineTo(b.x,b.y);
+    canvasContext.stroke();
+   });
+   canvasContext.restore();
+  }
   if(!preference.matches)orbitFrame=requestAnimationFrame(drawOrbit);
  }
  function bindOrbit(visual,nodes){
   stopOrbit();
   if(!visual||!nodes.length)return;
   const context=orbitContext={visual,nodes:nodes.map(element=>({element,plane:Number(element.dataset.orbitPlane)||0,phase:Number(element.dataset.orbitPhase)||0,radius:Number(element.dataset.orbitRadius)||.405,speed:Number(element.dataset.orbitSpeed)||.1})),elapsed:0,last:performance.now(),visible:!('IntersectionObserver'in window),yaw:0,pitch:0,hoverYaw:0,hoverPitch:0,dragging:false,lastX:0,lastY:0};
+  context.connectionCanvas=visual.querySelector('[data-system-connections]');
+  try{context.connectionContext=context.connectionCanvas?.getContext('2d',{alpha:true})||null;}catch{context.connectionContext=null;}
   visual.classList.remove('is-dragging');
   visual.addEventListener('pointerdown',event=>{
    if(event.target.closest('[data-orbit-node]')||(event.pointerType==='mouse'&&event.button!==0))return;
@@ -122,7 +168,7 @@
    if(context.dragging){
     const dx=event.clientX-context.lastX,dy=event.clientY-context.lastY;context.lastX=event.clientX;context.lastY=event.clientY;
     context.yaw=(context.yaw+dx*Math.PI*2/Math.max(1,bounds.width))%(Math.PI*2);
-    context.pitch=Math.max(-1.12,Math.min(1.12,context.pitch+dy*Math.PI/Math.max(1,bounds.height)));
+    context.pitch=Math.max(-.78,Math.min(.78,context.pitch+dy*Math.PI/Math.max(1,bounds.height)));
     context.hoverYaw=0;context.hoverPitch=0;scheduleOrbit();
    }else if(event.pointerType==='mouse'){
     context.hoverYaw=((event.clientX-bounds.left)/Math.max(1,bounds.width)-.5)*.28;

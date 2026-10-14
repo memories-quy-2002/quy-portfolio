@@ -1080,3 +1080,11 @@ html[data-theme="light"] .home-page .hero-subtitle{color:#52677b}
   .home-page .hero .button{padding-inline:15px}
   .home-hero-scene::before{background-size:auto,auto,auto,auto,auto,auto,100% auto}
 }
+/* Keep orbital axes inside the scene and render a live, connected systems mesh. */
+.home-hero-scene .system-visual{overflow:hidden}
+.home-hero-scene .system-orbits{inset:8%;overflow:hidden}
+.home-hero-scene .system-orbit{width:75%;height:68%}
+.home-hero-scene .system-orbit-outer{transform:translate(-50%,-50%) rotateX(calc(18deg + var(--orbit-tilt-x,0deg))) rotateY(var(--orbit-tilt-y,0deg)) rotateZ(-25deg)}
+.home-hero-scene .system-orbit-middle{width:71%;height:64%;transform:translate(-50%,-50%) rotateX(calc(-32deg + var(--orbit-tilt-x,0deg))) rotateY(var(--orbit-tilt-y,0deg)) rotateZ(39deg)}
+.home-hero-scene .system-orbit-inner{width:67%;height:60%;transform:translate(-50%,-50%) rotateX(calc(42deg + var(--orbit-tilt-x,0deg))) rotateY(var(--orbit-tilt-y,0deg)) rotateZ(-78deg)}
+.home-hero-scene .system-connections{position:absolute;inset:0;z-index:16;display:block;width:100%;height:100%;overflow:hidden;pointer-events:none}
