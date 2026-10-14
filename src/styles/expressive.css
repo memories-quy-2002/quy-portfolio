@@ -1184,3 +1184,67 @@ html[data-theme="light"] body{
 /* Start the Home backdrop directly below the sticky header; prevent light-mode body color from showing through. */
 .home-hero-scene::before{top:0;height:100%;mask-image:linear-gradient(180deg,#000 0%,#000 92%,transparent 100%)}
 html[data-theme="light"] .home-hero-scene::before{mask-image:linear-gradient(180deg,#000 0%,#000 92%,transparent 100%)}
+
+
+/* Light theme: retain the orbital scene's motion and depth with a light-safe palette. */
+html[data-theme="light"] .home-hero-scene::before{
+  opacity:1;
+  background:
+    radial-gradient(1.8px 1.8px at 7% 16%,#16877d 98%,transparent),
+    radial-gradient(1.5px 1.5px at 31% 29%,#4d87a2 98%,transparent),
+    radial-gradient(2px 2px at 56% 18%,#138e83 98%,transparent),
+    radial-gradient(1.5px 1.5px at 78% 34%,#527e9a 98%,transparent),
+    radial-gradient(1.5px 1.5px at 88% 72%,#16877d 98%,transparent),
+    radial-gradient(ellipse at 78% 70%,#67cbb324 0%,transparent 46%),
+    radial-gradient(ellipse at 18% 86%,#9ebed21f 0%,transparent 43%);
+  background-size:100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,140% 140%,130% 130%;
+  background-position:0 0,0 0,0 0,0 0,0 0,78% 70%,18% 86%;
+  background-repeat:no-repeat;
+  animation:light-hero-constellation 10s ease-in-out infinite alternate;
+}
+html[data-theme="light"] .home-hero-scene .system-core{
+  border-color:#4ac2b3c9;
+  background:radial-gradient(circle at 38% 32%,#82e1d780 0%,#317f7ad9 46%,#14384bdc 100%);
+  box-shadow:0 0 28px #168f802c,0 0 62px #38aa9b20,inset 0 0 24px #eafffa48;
+}
+html[data-theme="light"] .home-hero-scene .system-core::before{
+  border-color:#238e81a6;
+  background:radial-gradient(circle,#62cdbb2b,transparent 68%);
+  box-shadow:0 0 24px #168f802b;
+}
+html[data-theme="light"] .home-hero-scene .system-core::after{border-color:#e6fff36b}
+html[data-theme="light"] .home-hero-scene .system-core img{
+  filter:drop-shadow(0 0 15px #8ff4df76) drop-shadow(0 10px 18px #092b3a5c);
+}
+html[data-theme="light"] .home-hero-scene .system-node{
+  filter:drop-shadow(0 3px 10px #123b4a20);
+}
+html[data-theme="light"] .home-hero-scene .system-node::before{
+  background:radial-gradient(circle at 32% 24%,#ffffffd9 0%,#8ee7d96b 25%,#37b9a72b 54%,transparent 76%);
+  box-shadow:inset 0 0 16px #ffffffab,0 0 18px #188f8142;
+  opacity:.84;
+}
+html[data-theme="light"] .home-hero-scene .system-node img{
+  filter:contrast(1.04) saturate(1.08) drop-shadow(0 8px 11px #12374740) drop-shadow(0 0 10px #168f8033);
+}
+html[data-theme="light"] .home-hero-scene .system-node:hover::before,
+html[data-theme="light"] .home-hero-scene .system-node:focus-visible::before,
+html[data-theme="light"] .home-hero-scene .system-node[aria-pressed="true"]::before{
+  box-shadow:inset 0 0 20px #ffffffc9,0 0 28px #168f8070;
+}
+html[data-theme="light"] .home-hero-scene .system-node:hover img,
+html[data-theme="light"] .home-hero-scene .system-node:focus-visible img,
+html[data-theme="light"] .home-hero-scene .system-node[aria-pressed="true"] img{
+  filter:contrast(1.08) saturate(1.12) drop-shadow(0 10px 13px #1237474f) drop-shadow(0 0 21px #138e83a1);
+}
+html[data-theme="light"] .home-hero-scene .system-node:focus-visible img{
+  outline:2px solid #087f72;
+  outline-offset:-7px;
+}
+@keyframes light-hero-constellation{
+  from{background-position:0 0,0 0,0 0,0 0,0 0,78% 70%,18% 86%}
+  to{background-position:0 0,0 0,0 0,0 0,0 0,70% 66%,24% 80%}
+}
+@media(prefers-reduced-motion:reduce){
+  html[data-theme="light"] .home-hero-scene::before{animation:none}
+}
