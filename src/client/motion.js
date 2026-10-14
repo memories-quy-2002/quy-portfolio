@@ -2,7 +2,6 @@
 /** Cinematic navigation and bounded scroll effects; all motion has a reduced-motion path. */
 (() => {
  const preference=window.matchMedia('(prefers-reduced-motion: reduce)');
- let overlay;
  let animations=[];
  let run=0;
  let frame=0;
@@ -12,35 +11,33 @@
  let pointer={x:0,y:0};
  let sharedTransition;
  const canAnimate=()=>!preference.matches&&typeof Element.prototype.animate==='function';
- function ensureOverlay(){
-  if(overlay)return overlay;
-  overlay=document.createElement('div');overlay.className='page-curtain';overlay.setAttribute('aria-hidden','true');
-  overlay.innerHTML='<div class="curtain-accent"></div><div class="curtain-panel"><img src="/assets/hero-ring-cutout-1536.webp" alt="" width="1536" height="1024"><div class="curtain-copy"><span class="curtain-brand">PQ · Phú Quý</span><span class="curtain-name"></span><span class="curtain-rule"></span></div></div>';
-  document.body.append(overlay);return overlay;
- }
  function cancel(){
   run++;sharedTransition?.skipTransition();sharedTransition=null;animations.forEach(animation=>animation.cancel());animations=[];
-  overlay?.classList.remove('active');document.getElementById('main')?.classList.remove('shared-entry');
+  document.getElementById('main')?.classList.remove('shared-entry');
  }
  function animate(element,keyframes,options){
   const animation=element.animate(keyframes,{fill:'both',...options});animations.push(animation);
   return animation.finished.catch(()=>{});
  }
- async function transition(update,name,isCurrent=()=>true){
+ async function transition(update,_name,isCurrent=()=>true){
   if(!canAnimate()){update();return;}
-  cancel();const id=run;const el=ensureOverlay();const accent=el.querySelector('.curtain-accent');const panel=el.querySelector('.curtain-panel');const title=el.querySelector('.curtain-copy');
-  el.querySelector('.curtain-name').textContent=name;el.classList.add('active');
-  const ease='cubic-bezier(.76,0,.24,1)';
-  animate(accent,[{transform:'translateY(105%)'},{transform:'translateY(0%)'}],{duration:140,easing:ease});
-  animate(title,[{opacity:0,transform:'translateY(30px)'},{opacity:1,transform:'translateY(0px)'}],{duration:110,delay:40,easing:'cubic-bezier(.22,1,.36,1)'});
-  await animate(panel,[{transform:'translateY(110%)'},{transform:'translateY(0%)'}],{duration:150,delay:10,easing:ease});
+  cancel();const id=run;const root=document.getElementById('main');
+  if(!root){update();return;}
+  await animate(root,[{opacity:1,transform:'translateY(0px)'},{opacity:0,transform:'translateY(10px)'}],{duration:120,easing:'cubic-bezier(.4,0,1,1)'});
   if(id!==run||!isCurrent())return;
-  // Swap content only once the curtain covers it; this avoids flashes and layout jumps.
+  // Keep the shared shell and ambient background mounted; replace only page content.
   try{update();}catch(error){cancel();throw error;}
-  animate(title,[{opacity:1,transform:'translateY(0px)'},{opacity:0,transform:'translateY(-25px)'}],{duration:80,easing:'ease-in'});
-  animate(accent,[{transform:'translateY(0%)'},{transform:'translateY(-105%)'}],{duration:160,delay:10,easing:ease});
-  await animate(panel,[{transform:'translateY(0%)'},{transform:'translateY(-110%)'}],{duration:150,delay:15,easing:ease});
-  if(id===run){el.classList.remove('active');animations.forEach(animation=>animation.cancel());animations=[];}
+  if(id!==run)return;
+  root.classList.add('has-client-navigated');
+  const heading=root.querySelector('h1');
+  const intro=root.querySelector('.hero-subtitle,.hero .lead,.page-heading .lead,.case-heading .lead');
+  const effects=[
+   animate(root,[{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'translateY(0px)'}],{duration:220,easing:'cubic-bezier(.22,1,.36,1)'}),
+  ];
+  if(heading)effects.push(animate(heading,[{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'translateY(0px)'}],{duration:220,delay:40,easing:'cubic-bezier(.22,1,.36,1)'}));
+  if(intro)effects.push(animate(intro,[{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'translateY(0px)'}],{duration:220,delay:90,easing:'cubic-bezier(.22,1,.36,1)'}));
+  await Promise.all(effects);
+  if(id===run){animations.forEach(animation=>animation.cancel());animations=[];}
  }
  async function projectTransition(update,origin,isCurrent=()=>true){
   if(!canAnimate()||typeof document.startViewTransition!=='function'){return transition(update,origin.querySelector('h3')?.textContent||'',isCurrent);}
@@ -60,6 +57,34 @@
   finally{touched.forEach(element=>element.style.removeProperty('view-transition-name'));if(id===run){sharedTransition=null;document.getElementById('main').classList.remove('shared-entry');}}
  }
  function resetHero(){if(hero)for(const property of ['--hero-x','--hero-y','--hero-rx','--hero-ry','--hero-shift'])hero.style.removeProperty(property);pointer={x:0,y:0};}
+ let ambientPointerFrame=0;
+ let ambientPointer={x:window.innerWidth/2,y:window.innerHeight/2,targetX:window.innerWidth/2,targetY:window.innerHeight/2,opacity:0,targetOpacity:0};
+ function drawAmbientPointer(){
+  ambientPointerFrame=0;
+  if(preference.matches)return;
+  ambientPointer.x+=(ambientPointer.targetX-ambientPointer.x)*.16;
+  ambientPointer.y+=(ambientPointer.targetY-ambientPointer.y)*.16;
+  ambientPointer.opacity+=(ambientPointer.targetOpacity-ambientPointer.opacity)*.14;
+  const root=document.documentElement;
+  root.style.setProperty('--pointer-x',ambientPointer.x.toFixed(1)+'px');
+  root.style.setProperty('--pointer-y',ambientPointer.y.toFixed(1)+'px');
+  root.style.setProperty('--pointer-opacity',ambientPointer.opacity.toFixed(3));
+  if(Math.abs(ambientPointer.targetX-ambientPointer.x)>.5||Math.abs(ambientPointer.targetY-ambientPointer.y)>.5||Math.abs(ambientPointer.targetOpacity-ambientPointer.opacity)>.002){
+   ambientPointerFrame=requestAnimationFrame(drawAmbientPointer);
+  }
+ }
+ function scheduleAmbientPointer(){if(!ambientPointerFrame&&!preference.matches)ambientPointerFrame=requestAnimationFrame(drawAmbientPointer);}
+ function clearAmbientPointer(){ambientPointer.targetOpacity=0;scheduleAmbientPointer();}
+ const finePointer=window.matchMedia('(hover:hover) and (pointer:fine)');
+ if(finePointer.matches){
+  window.addEventListener('pointermove',event=>{
+   if(preference.matches||event.pointerType!=='mouse')return;
+   ambientPointer.targetX=event.clientX;ambientPointer.targetY=event.clientY;ambientPointer.targetOpacity=document.documentElement.dataset.theme==='light' ? 0.055 : 0.085;
+   scheduleAmbientPointer();
+  },{passive:true});
+  document.addEventListener('pointerout',event=>{if(!event.relatedTarget)clearAmbientPointer();});
+  window.addEventListener('blur',clearAmbientPointer);
+ }
  let orbitFrame=0;
  let orbitObserver;
  let orbitContext;
@@ -217,7 +242,7 @@
  window.addEventListener('blur',()=>{resetHero();});
  window.addEventListener('scroll',schedule,{passive:true});window.addEventListener('resize',schedule,{passive:true});
  document.addEventListener('visibilitychange',()=>{if(document.hidden){if(orbitFrame)cancelAnimationFrame(orbitFrame);orbitFrame=0;}else{if(orbitContext)orbitContext.last=performance.now();scheduleOrbit();schedule();}});
- preference.addEventListener?.('change',()=>{if(preference.matches){cancel();if(frame)cancelAnimationFrame(frame);frame=0;stages.forEach(stage=>stage.style.removeProperty('--scroll-lift'));resetHero();}else schedule();});
+ preference.addEventListener?.('change',()=>{if(preference.matches){ambientPointer.targetOpacity=0;if(ambientPointerFrame)cancelAnimationFrame(ambientPointerFrame);ambientPointerFrame=0;document.documentElement.style.setProperty('--pointer-opacity','0');cancel();if(frame)cancelAnimationFrame(frame);frame=0;stages.forEach(stage=>stage.style.removeProperty('--scroll-lift'));resetHero();}else schedule();});
  window.PortfolioMotion={transition,projectTransition,cancel,refresh};
 })();
 
