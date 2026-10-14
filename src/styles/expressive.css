@@ -1106,3 +1106,49 @@ html[data-theme="light"] .home-page .hero-subtitle{color:#52677b}
 html[data-theme="light"] .home-hero-scene .system-detail-title{color:#173e48}
 html[data-theme="light"] .home-hero-scene .system-detail-tag{border-color:#268d8170;background:#dff5f0;color:#17645e}
 @media(prefers-reduced-motion:reduce){.home-hero-scene .system-node::before,.home-hero-scene .system-node img{transition:none}}
+
+/* Consistent, restrained motion for route changes and pointer feedback. */
+body{
+  background-image:
+    radial-gradient(270px circle at var(--pointer-x,50vw) var(--pointer-y,50vh),rgba(81,220,210,var(--pointer-opacity,0)),transparent 78%),
+    radial-gradient(ellipse at 90% 4%,#17334466,transparent 28%),
+    radial-gradient(ellipse at 5% 35%,#18382e22,transparent 25%);
+  background-size:100% 100%,135% 135%,125% 125%;
+  background-position:0 0,90% 4%,5% 35%;
+  background-repeat:no-repeat;background-attachment:fixed,scroll,scroll;
+  animation:portfolio-ambient-drift 34s ease-in-out infinite alternate;
+}
+html[data-theme="light"] body{
+  background-image:
+    radial-gradient(270px circle at var(--pointer-x,50vw) var(--pointer-y,50vh),rgba(40,165,151,var(--pointer-opacity,0)),transparent 78%),
+    radial-gradient(ellipse at 90% 4%,#dbeaf2 0,transparent 29%),
+    radial-gradient(ellipse at 5% 35%,#e1efe9 0,transparent 26%);
+}
+@keyframes portfolio-ambient-drift{
+  0%{background-position:0 0,90% 4%,5% 35%}
+  50%{background-position:0 0,96% 1%,1% 40%}
+  100%{background-position:0 0,100% 8%,0% 45%}
+}
+.site-nav a:focus-visible{color:var(--ink)}
+.button:active{transform:translateY(-1px) scale(.99);transition-duration:90ms}
+.button.primary:hover{box-shadow:0 8px 24px #2bd8c21a}
+.project-card:hover{transform:translateY(-4px);box-shadow:0 20px 42px #0002}
+.project-card:hover .project-visual>img{transform:scale(1.02)}
+.project-card:active{transform:translateY(-2px)}
+@media(hover:none){
+  .button:hover{transform:none;box-shadow:none}
+  .project-card:hover{transform:none;box-shadow:none}
+  .project-card:hover .project-visual>img{transform:none}
+  .site-nav a:hover{color:var(--muted)}
+  .button:active{transform:translateY(-1px) scale(.99)}
+  .project-card:active{transform:translateY(-2px)}
+  .home-hero-scene .system-node:hover::before{opacity:.72;transform:none}
+  .home-hero-scene .system-node:hover img{transform:none;filter:contrast(1.06) saturate(1.12) drop-shadow(0 10px 12px #0009) drop-shadow(0 0 12px #49e8d45c)}
+  .home-hero-scene .system-node:active img{transform:scale(1.06)}
+}
+@media(prefers-reduced-motion:reduce){
+  body{animation:none!important;background-attachment:scroll}
+  .button:active,.project-card:active{transform:none}
+}
+
+.page-shell.has-client-navigated .hero-copy,.page-shell.has-client-navigated .hero-art{animation:none!important}
