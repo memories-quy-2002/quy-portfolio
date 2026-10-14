@@ -1165,3 +1165,17 @@ html[data-theme="light"] body{
 .home-hero-scene{padding-top:clamp(24px,4vh,46px);padding-bottom:clamp(18px,3vh,34px)}
 @media(max-width:760px){.home-hero-scene{padding:28px 0 18px;gap:10px}}
 @media(max-width:480px){.home-hero-scene{padding:20px 0 14px}}
+
+
+/* Keep Home hero height stable when sphere details gain content; remove excess vertical spacing. */
+.home-hero-scene{min-height:0;padding-top:clamp(16px,2vh,22px);padding-bottom:clamp(14px,1.8vh,20px)}
+.home-hero-scene .hero-art{align-content:start;padding-bottom:194px}
+.home-hero-scene .system-detail{position:absolute;top:auto;bottom:25px;left:50%;margin:0;transform:translateX(-50%)}
+.home-hero-scene .system-caption{position:absolute;top:auto;bottom:0;left:50%;margin:0;transform:translateX(-50%)}
+@media(max-width:760px){
+ .home-hero-scene{min-height:0;padding:24px 0 16px;gap:10px}
+ .home-hero-scene .hero-art{padding-bottom:218px}
+}
+@media(max-width:480px){
+ .home-hero-scene{padding:16px 0 12px}
+}
