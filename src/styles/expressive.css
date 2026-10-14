@@ -866,10 +866,10 @@ html[data-theme="light"] .system-detail{background:linear-gradient(135deg,#fffff
 .system-node:hover img,.system-node[aria-pressed="true"] img{filter:drop-shadow(0 16px 18px #0009) drop-shadow(0 0 22px #74fff0a6);opacity:1}
 .system-node:focus-visible{outline:2px solid #a7fff0;outline-offset:2px;box-shadow:0 0 0 5px #55e8d43d}
 .system-node-1{--node-x:clamp(100px,31vw,184px);--node-y:0px}
-.system-node-2{--node-x:clamp(-184px,-31vw,-100px);--node-y:0px}
-.system-node-3{--node-x:clamp(50px,15.5vw,92px);--node-y:clamp(80px,27vw,160px)}
-.system-node-4{--node-x:clamp(-92px,-15.5vw,-50px);--node-y:clamp(-160px,-27vw,-80px)}
-.system-node-5{--node-x:clamp(-92px,-15.5vw,-50px);--node-y:clamp(80px,27vw,160px)}
+.system-node-2{--node-x:clamp(50px,15.5vw,92px);--node-y:clamp(80px,27vw,160px)}
+.system-node-3{--node-x:clamp(-92px,-15.5vw,-50px);--node-y:clamp(80px,27vw,160px)}
+.system-node-4{--node-x:clamp(-184px,-31vw,-100px);--node-y:0px}
+.system-node-5{--node-x:clamp(-92px,-15.5vw,-50px);--node-y:clamp(-160px,-27vw,-80px)}
 .system-node-6{--node-x:clamp(50px,15.5vw,92px);--node-y:clamp(-160px,-27vw,-80px)}
 .system-visual.is-dragging{cursor:grabbing}
 .system-detail{position:relative;left:auto;top:auto;z-index:2;width:min(360px,88%);min-height:50px;margin:-7px auto 0;padding:10px 15px;transform:none;border:1px solid #8debd15c;border-radius:12px;background:linear-gradient(135deg,#113441f2,#0b1728f4);color:#dcf8f5;text-align:center;font-size:12px;line-height:1.55;box-shadow:0 14px 30px #0004,inset 0 1px #ffffff1b,0 0 28px #32cfbd16}
@@ -882,3 +882,9 @@ html[data-theme="light"] .system-caption{color:#466675;text-shadow:none}
 @media(max-width:700px){.hero-art{max-width:500px}.system-visual{width:min(100%,460px)}.system-core{width:33%}.system-node{width:23%;min-width:68px;max-width:112px}.system-detail{width:min(340px,90%);font-size:11px}}
 @media(max-width:420px){.system-visual{width:min(100%,400px)}.system-node{width:23%;min-width:60px;max-width:94px}.system-core{width:32%}.system-detail{width:92%;padding:9px 12px;font-size:10px}.system-caption{font-size:9px}}
 @media(prefers-reduced-motion:reduce){.system-node img{transition:none}.system-visual,.system-orbits,.system-orbit,.system-node{animation:none!important;transition:none!important}}
+
+/* Keep all six nodes evenly spaced throughout their shared orbit. */
+.system-visual{touch-action:none}
+.system-node{touch-action:manipulation}
+.system-orbit{animation:none}
+.system-detail{margin:8px auto 0}
