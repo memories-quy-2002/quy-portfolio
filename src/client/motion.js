@@ -189,12 +189,16 @@
   const visual=root.querySelector('[data-system-visual]');
   const nodes=[...visual?.querySelectorAll('[data-system-node]')||[]];
   const detail=root.querySelector('[data-system-detail]');
+  const detailLayer=detail?.querySelector('[data-system-detail-layer]');
   const detailTitle=detail?.querySelector('[data-system-detail-title]');
+  const detailTags=detail?.querySelector('[data-system-detail-tags]');
   const detailCopy=detail?.querySelector('[data-system-detail-copy]');
   nodes.forEach(node=>node.addEventListener('click',()=>{
    nodes.forEach(item=>item.setAttribute('aria-pressed',String(item===node)));
+   if(detailLayer)detailLayer.textContent=node.dataset.layer||'';
    if(detailTitle)detailTitle.textContent=node.getAttribute('aria-label')||'';
    if(detailCopy)detailCopy.textContent=node.dataset.detail||'';
+   if(detailTags){detailTags.replaceChildren(...(node.dataset.stack||'').split('|').filter(Boolean).map(label=>{const tag=document.createElement('span');tag.className='system-detail-tag';tag.textContent=label;return tag;}));}
    if(detail){detail.dataset.state='selected';detail.classList.add('is-open');}
   }));
   bindOrbit(visual,nodes);
