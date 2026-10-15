@@ -1268,3 +1268,45 @@ html[data-theme="light"] .home-hero-scene .system-node:focus-visible img{
   .home-hero-scene .system-visual{width:min(100%,320px)}
   .home-hero-scene .hero-art{padding-bottom:160px}
 }
+
+
+/* Shared Tech Universe Space backdrop: carry the Home nightscape and stars across every route. */
+body{position:relative;isolation:isolate}
+body::before{
+  content:"";position:fixed;inset:-3%;z-index:-1;pointer-events:none;
+  opacity:.48;transform:scale(1.035);transform-origin:center;
+  background:
+    radial-gradient(1.2px 1.2px at 8% 16%,#c5f5ffcf 98%,transparent),
+    radial-gradient(1px 1px at 23% 42%,#a4ddffd1 98%,transparent),
+    radial-gradient(1.4px 1.4px at 43% 12%,#d9f8ffd1 98%,transparent),
+    radial-gradient(1px 1px at 67% 27%,#a8e7ffd1 98%,transparent),
+    radial-gradient(1.2px 1.2px at 86% 18%,#d8f8ffd1 98%,transparent),
+    radial-gradient(1px 1px at 93% 61%,#a6e9ffe0 98%,transparent),
+    linear-gradient(180deg,#07111e25 0%,#07111e45 42%,#07111e91 100%),
+    url('/assets/hero-nightscape.webp') center 58% / cover no-repeat;
+  background-size:100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,cover;
+  animation:site-space-backdrop-drift 72s ease-in-out infinite alternate;
+}
+@keyframes site-space-backdrop-drift{
+  from{transform:scale(1.035) translate3d(-.25%,0,0)}
+  to{transform:scale(1.055) translate3d(.25%,-.25%,0)}
+}
+/* Home already has its own cinematic nightscape, so keep the shared layer faint there. */
+body:has(.home-hero-scene)::before{opacity:.12;animation:none}
+html[data-theme="light"] body::before{
+  opacity:.22;filter:saturate(.55) brightness(1.55);
+  background:
+    radial-gradient(1.2px 1.2px at 8% 16%,#167f78d9 98%,transparent),
+    radial-gradient(1px 1px at 23% 42%,#3e7791d9 98%,transparent),
+    radial-gradient(1.4px 1.4px at 43% 12%,#16877dd9 98%,transparent),
+    radial-gradient(1px 1px at 67% 27%,#456f8bd9 98%,transparent),
+    radial-gradient(1.2px 1.2px at 86% 18%,#16877dd9 98%,transparent),
+    radial-gradient(1px 1px at 93% 61%,#3e7791d9 98%,transparent),
+    linear-gradient(180deg,#f6faf230 0%,#f6faf260 48%,#f6faf2a6 100%),
+    url('/assets/hero-nightscape.webp') center 58% / cover no-repeat;
+}
+html[data-theme="light"] body:has(.home-hero-scene)::before{opacity:.06}
+@media(prefers-reduced-motion:reduce){body::before{animation:none;transform:scale(1.035)}}
+@media(max-width:700px){
+  body::before{inset:-2%;background-position:0 0,0 0,0 0,0 0,0 0,0 0,center,center 58%}
+}
