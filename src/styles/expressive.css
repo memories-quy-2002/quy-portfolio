@@ -1248,3 +1248,23 @@ html[data-theme="light"] .home-hero-scene .system-node:focus-visible img{
 @media(prefers-reduced-motion:reduce){
   html[data-theme="light"] .home-hero-scene::before{animation:none}
 }
+
+
+/* Compact Home hero: reduce vertical footprint while keeping the orbit detail readable. */
+.home-hero-scene{
+  min-height:0;
+  padding-top:clamp(12px,1.5vh,18px);
+  padding-bottom:clamp(12px,1.5vh,18px);
+}
+.home-hero-scene .system-visual{width:min(100%,480px)}
+.home-hero-scene .hero-art{padding-bottom:160px}
+@media(max-width:760px){
+  .home-hero-scene{padding:18px 0 12px;gap:8px}
+  .home-hero-scene .system-visual{width:min(100%,360px)}
+  .home-hero-scene .hero-art{padding-bottom:160px}
+}
+@media(max-width:480px){
+  .home-hero-scene{padding:12px 0 10px}
+  .home-hero-scene .system-visual{width:min(100%,320px)}
+  .home-hero-scene .hero-art{padding-bottom:160px}
+}
