@@ -1106,3 +1106,207 @@ html[data-theme="light"] .home-page .hero-subtitle{color:#52677b}
 html[data-theme="light"] .home-hero-scene .system-detail-title{color:#173e48}
 html[data-theme="light"] .home-hero-scene .system-detail-tag{border-color:#268d8170;background:#dff5f0;color:#17645e}
 @media(prefers-reduced-motion:reduce){.home-hero-scene .system-node::before,.home-hero-scene .system-node img{transition:none}}
+
+/* Consistent, restrained motion for route changes and pointer feedback. */
+body{
+  background-image:
+    radial-gradient(270px circle at var(--pointer-x,50vw) var(--pointer-y,50vh),rgba(81,220,210,var(--pointer-opacity,0)),transparent 78%),
+    radial-gradient(ellipse at 90% 4%,#17334466,transparent 28%),
+    radial-gradient(ellipse at 5% 35%,#18382e22,transparent 25%);
+  background-size:100% 100%,135% 135%,125% 125%;
+  background-position:0 0,90% 4%,5% 35%;
+  background-repeat:no-repeat;background-attachment:fixed,scroll,scroll;
+  animation:portfolio-ambient-drift 34s ease-in-out infinite alternate;
+}
+html[data-theme="light"] body{
+  background-image:
+    radial-gradient(270px circle at var(--pointer-x,50vw) var(--pointer-y,50vh),rgba(40,165,151,var(--pointer-opacity,0)),transparent 78%),
+    radial-gradient(ellipse at 90% 4%,#dbeaf2 0,transparent 29%),
+    radial-gradient(ellipse at 5% 35%,#e1efe9 0,transparent 26%);
+}
+@keyframes portfolio-ambient-drift{
+  0%{background-position:0 0,90% 4%,5% 35%}
+  50%{background-position:0 0,96% 1%,1% 40%}
+  100%{background-position:0 0,100% 8%,0% 45%}
+}
+.site-nav a:focus-visible{color:var(--ink)}
+.button:active{transform:translateY(-1px) scale(.99);transition-duration:90ms}
+.button.primary:hover{box-shadow:0 8px 24px #2bd8c21a}
+.project-card:hover{transform:translateY(-4px);box-shadow:0 20px 42px #0002}
+.project-card:hover .project-visual>img{transform:scale(1.02)}
+.project-card:active{transform:translateY(-2px)}
+@media(hover:none){
+  .button:hover{transform:none;box-shadow:none}
+  .project-card:hover{transform:none;box-shadow:none}
+  .project-card:hover .project-visual>img{transform:none}
+  .site-nav a:hover{color:var(--muted)}
+  .button:active{transform:translateY(-1px) scale(.99)}
+  .project-card:active{transform:translateY(-2px)}
+  .home-hero-scene .system-node:hover::before{opacity:.72;transform:none}
+  .home-hero-scene .system-node:hover img{transform:none;filter:contrast(1.06) saturate(1.12) drop-shadow(0 10px 12px #0009) drop-shadow(0 0 12px #49e8d45c)}
+  .home-hero-scene .system-node:active img{transform:scale(1.06)}
+}
+@media(prefers-reduced-motion:reduce){
+  body{animation:none!important;background-attachment:scroll}
+  .button:active,.project-card:active{transform:none}
+}
+
+.page-shell.has-client-navigated .hero-copy,.page-shell.has-client-navigated .hero-art{animation:none!important}
+
+/* Give the TMA mark the same white tile in both color themes. */
+.experience-top .company-mark-tma{background:#fff;border-color:#d5e1ec}
+/* The source wordmark is white; darken it for contrast on the white tile. */
+.experience-top .company-mark-tma img{filter:brightness(.42) saturate(1.2) contrast(1.08)}
+
+
+/* Fit the supplied TMA artwork to the shared logo tile and trim excess Home hero padding. */
+.experience-top .company-mark-tma{padding:6px;background:#fff;border-color:#d5e1ec}
+.experience-top .company-mark-tma img{display:block;width:100%;height:100%;padding:0;border:0;border-radius:0;background:#fff;filter:none;object-fit:contain}
+.home-hero-scene{padding-top:clamp(24px,4vh,46px);padding-bottom:clamp(18px,3vh,34px)}
+@media(max-width:760px){.home-hero-scene{padding:28px 0 18px;gap:10px}}
+@media(max-width:480px){.home-hero-scene{padding:20px 0 14px}}
+
+
+/* Keep Home hero height stable when sphere details gain content; remove excess vertical spacing. */
+.home-hero-scene{min-height:0;padding-top:clamp(16px,2vh,22px);padding-bottom:clamp(14px,1.8vh,20px)}
+.home-hero-scene .hero-art{align-content:start;padding-bottom:194px}
+.home-hero-scene .system-detail{position:absolute;top:auto;bottom:25px;left:50%;margin:0;transform:translateX(-50%)}
+.home-hero-scene .system-caption{position:absolute;top:auto;bottom:0;left:50%;margin:0;transform:translateX(-50%)}
+@media(max-width:760px){
+ .home-hero-scene{min-height:0;padding:24px 0 16px;gap:10px}
+ .home-hero-scene .hero-art{padding-bottom:218px}
+}
+@media(max-width:480px){
+ .home-hero-scene{padding:16px 0 12px}
+}
+
+
+/* Start the Home backdrop directly below the sticky header; prevent light-mode body color from showing through. */
+.home-hero-scene::before{top:0;height:100%;mask-image:linear-gradient(180deg,#000 0%,#000 92%,transparent 100%)}
+html[data-theme="light"] .home-hero-scene::before{mask-image:linear-gradient(180deg,#000 0%,#000 92%,transparent 100%)}
+
+
+/* Light theme: retain the orbital scene's motion and depth with a light-safe palette. */
+html[data-theme="light"] .home-hero-scene::before{
+  opacity:1;
+  background:
+    radial-gradient(1.8px 1.8px at 7% 16%,#16877d 98%,transparent),
+    radial-gradient(1.5px 1.5px at 31% 29%,#4d87a2 98%,transparent),
+    radial-gradient(2px 2px at 56% 18%,#138e83 98%,transparent),
+    radial-gradient(1.5px 1.5px at 78% 34%,#527e9a 98%,transparent),
+    radial-gradient(1.5px 1.5px at 88% 72%,#16877d 98%,transparent),
+    radial-gradient(ellipse at 78% 70%,#67cbb324 0%,transparent 46%),
+    radial-gradient(ellipse at 18% 86%,#9ebed21f 0%,transparent 43%);
+  background-size:100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,140% 140%,130% 130%;
+  background-position:0 0,0 0,0 0,0 0,0 0,78% 70%,18% 86%;
+  background-repeat:no-repeat;
+  animation:light-hero-constellation 10s ease-in-out infinite alternate;
+}
+html[data-theme="light"] .home-hero-scene .system-core{
+  border-color:#4ac2b3c9;
+  background:radial-gradient(circle at 38% 32%,#82e1d780 0%,#317f7ad9 46%,#14384bdc 100%);
+  box-shadow:0 0 28px #168f802c,0 0 62px #38aa9b20,inset 0 0 24px #eafffa48;
+}
+html[data-theme="light"] .home-hero-scene .system-core::before{
+  border-color:#238e81a6;
+  background:radial-gradient(circle,#62cdbb2b,transparent 68%);
+  box-shadow:0 0 24px #168f802b;
+}
+html[data-theme="light"] .home-hero-scene .system-core::after{border-color:#e6fff36b}
+html[data-theme="light"] .home-hero-scene .system-core img{
+  filter:drop-shadow(0 0 15px #8ff4df76) drop-shadow(0 10px 18px #092b3a5c);
+}
+html[data-theme="light"] .home-hero-scene .system-node{
+  filter:drop-shadow(0 3px 10px #123b4a20);
+}
+html[data-theme="light"] .home-hero-scene .system-node::before{
+  background:radial-gradient(circle at 32% 24%,#ffffffd9 0%,#8ee7d96b 25%,#37b9a72b 54%,transparent 76%);
+  box-shadow:inset 0 0 16px #ffffffab,0 0 18px #188f8142;
+  opacity:.84;
+}
+html[data-theme="light"] .home-hero-scene .system-node img{
+  filter:contrast(1.04) saturate(1.08) drop-shadow(0 8px 11px #12374740) drop-shadow(0 0 10px #168f8033);
+}
+html[data-theme="light"] .home-hero-scene .system-node:hover::before,
+html[data-theme="light"] .home-hero-scene .system-node:focus-visible::before,
+html[data-theme="light"] .home-hero-scene .system-node[aria-pressed="true"]::before{
+  box-shadow:inset 0 0 20px #ffffffc9,0 0 28px #168f8070;
+}
+html[data-theme="light"] .home-hero-scene .system-node:hover img,
+html[data-theme="light"] .home-hero-scene .system-node:focus-visible img,
+html[data-theme="light"] .home-hero-scene .system-node[aria-pressed="true"] img{
+  filter:contrast(1.08) saturate(1.12) drop-shadow(0 10px 13px #1237474f) drop-shadow(0 0 21px #138e83a1);
+}
+html[data-theme="light"] .home-hero-scene .system-node:focus-visible img{
+  outline:2px solid #087f72;
+  outline-offset:-7px;
+}
+@keyframes light-hero-constellation{
+  from{background-position:0 0,0 0,0 0,0 0,0 0,78% 70%,18% 86%}
+  to{background-position:0 0,0 0,0 0,0 0,0 0,70% 66%,24% 80%}
+}
+@media(prefers-reduced-motion:reduce){
+  html[data-theme="light"] .home-hero-scene::before{animation:none}
+}
+
+
+/* Compact Home hero: reduce vertical footprint while keeping the orbit detail readable. */
+.home-hero-scene{
+  min-height:0;
+  padding-top:clamp(12px,1.5vh,18px);
+  padding-bottom:clamp(12px,1.5vh,18px);
+}
+.home-hero-scene .system-visual{width:min(100%,480px)}
+.home-hero-scene .hero-art{padding-bottom:160px}
+@media(max-width:760px){
+  .home-hero-scene{padding:18px 0 12px;gap:8px}
+  .home-hero-scene .system-visual{width:min(100%,360px)}
+  .home-hero-scene .hero-art{padding-bottom:160px}
+}
+@media(max-width:480px){
+  .home-hero-scene{padding:12px 0 10px}
+  .home-hero-scene .system-visual{width:min(100%,320px)}
+  .home-hero-scene .hero-art{padding-bottom:160px}
+}
+
+
+/* Shared Tech Universe Space backdrop: carry the Home nightscape and stars across every route. */
+body{position:relative;isolation:isolate}
+body::before{
+  content:"";position:fixed;inset:-3%;z-index:-1;pointer-events:none;
+  opacity:.48;transform:scale(1.035);transform-origin:center;
+  background:
+    radial-gradient(1.2px 1.2px at 8% 16%,#c5f5ffcf 98%,transparent),
+    radial-gradient(1px 1px at 23% 42%,#a4ddffd1 98%,transparent),
+    radial-gradient(1.4px 1.4px at 43% 12%,#d9f8ffd1 98%,transparent),
+    radial-gradient(1px 1px at 67% 27%,#a8e7ffd1 98%,transparent),
+    radial-gradient(1.2px 1.2px at 86% 18%,#d8f8ffd1 98%,transparent),
+    radial-gradient(1px 1px at 93% 61%,#a6e9ffe0 98%,transparent),
+    linear-gradient(180deg,#07111e25 0%,#07111e45 42%,#07111e91 100%),
+    url('/assets/hero-nightscape.webp') center 58% / cover no-repeat;
+  background-size:100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%,cover;
+  animation:site-space-backdrop-drift 72s ease-in-out infinite alternate;
+}
+@keyframes site-space-backdrop-drift{
+  from{transform:scale(1.035) translate3d(-.25%,0,0)}
+  to{transform:scale(1.055) translate3d(.25%,-.25%,0)}
+}
+/* Home already has its own cinematic nightscape, so keep the shared layer faint there. */
+body:has(.home-hero-scene)::before{opacity:.12;animation:none}
+html[data-theme="light"] body::before{
+  opacity:.22;filter:saturate(.55) brightness(1.55);
+  background:
+    radial-gradient(1.2px 1.2px at 8% 16%,#167f78d9 98%,transparent),
+    radial-gradient(1px 1px at 23% 42%,#3e7791d9 98%,transparent),
+    radial-gradient(1.4px 1.4px at 43% 12%,#16877dd9 98%,transparent),
+    radial-gradient(1px 1px at 67% 27%,#456f8bd9 98%,transparent),
+    radial-gradient(1.2px 1.2px at 86% 18%,#16877dd9 98%,transparent),
+    radial-gradient(1px 1px at 93% 61%,#3e7791d9 98%,transparent),
+    linear-gradient(180deg,#f6faf230 0%,#f6faf260 48%,#f6faf2a6 100%),
+    url('/assets/hero-nightscape.webp') center 58% / cover no-repeat;
+}
+html[data-theme="light"] body:has(.home-hero-scene)::before{opacity:.06}
+@media(prefers-reduced-motion:reduce){body::before{animation:none;transform:scale(1.035)}}
+@media(max-width:700px){
+  body::before{inset:-2%;background-position:0 0,0 0,0 0,0 0,0 0,0 0,center,center 58%}
+}
