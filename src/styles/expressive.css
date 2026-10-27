@@ -1307,6 +1307,21 @@ html[data-theme="light"] body::before{
 }
 html[data-theme="light"] body:has(.home-hero-scene)::before{opacity:.06}
 @media(prefers-reduced-motion:reduce){body::before{animation:none;transform:scale(1.035)}}
+
+/* Align the hero actions and keep the selected project previews on one image grid. */
+.home-hero-scene{align-items:start;padding-top:clamp(8px,1vh,14px)}
+.home-hero-scene>.hero-copy{align-self:center}
+.home-page .hero .actions{align-items:center;gap:12px}
+.home-page .hero .actions>.button,.home-page .hero .actions>.resume-actions.compact .button{min-height:54px;padding:13px 20px;line-height:1.3;white-space:nowrap}
+.home-page .hero .actions>.resume-actions.compact{display:flex;align-items:center;margin:0}
+.home-page .hero .actions>.resume-actions.compact .button{border-color:#35475d;background:#101e2e}
+.home-project-image .project-visual{aspect-ratio:16/9;display:flex;flex-direction:column}
+.home-project-image .project-visual img{flex:1;min-height:0;width:100%;height:auto;max-height:none;aspect-ratio:auto;object-fit:cover;object-position:top center}
+@media(max-width:760px){
+  .home-hero-scene{align-items:stretch;padding:12px 0 12px}
+  .home-hero-scene>.hero-copy{align-self:auto}
+}
+@media(max-width:480px){.home-hero-scene{padding-top:8px}}
 @media(max-width:700px){
   body::before{inset:-2%;background-position:0 0,0 0,0 0,0 0,0 0,0 0,center,center 58%}
 }
