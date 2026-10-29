@@ -60,12 +60,18 @@ function responsiveImageSrcset(src, width) {
  const base=src.slice(0,-5);
  const candidates=[`${base}-640.webp 640w`,`${base}-960.webp 960w`];
  if(Number(width)>1280)candidates.push(`${base}-1280.webp 1280w`);
+ if(Number(width)>2560)candidates.push(`${base}-1920.webp 1920w`,`${base}-2560.webp 2560w`);
  candidates.push(`${src} ${width}w`);
  return candidates.join(', ');
 }
 function responsiveImageAttrs(src, width, sizes) {
  const srcset=responsiveImageSrcset(src,width);
  return srcset?` srcset="${srcset}" sizes="${sizes}"`:'';
+}
+function galleryThumbnail(shot) {
+ const width=shot.width>2560?640:360;
+ const suffix=shot.width>2560?'-640.webp':'-thumb.webp';
+ return `<img src="${shot.image.replace(/\.webp$/,suffix)}" alt="" width="${width}" height="${Math.round(width*shot.height/shot.width)}" loading="lazy" decoding="async">`;
 }
 function architectureNode(node,index){
  const brand=node.brand?logo(node.brand,'architecture-brand'):icon(node.icon||'monitor','architecture-brand architecture-generic');
@@ -151,7 +157,7 @@ function homeProjectPreview(project,index) {
 function productGallery(project) {
  if(!project.gallery?.length)return `<section class="case-showcase reveal">${projectVisual(project,true)}<p class="image-caption">${t('ecoffeeNote')}</p></section>`;
  const first=project.gallery[0];
- return `<section class="case-showcase product-gallery reveal" data-gallery="${project.id}"><div class="gallery-heading">${label(t('gallery'))}<span class="muted">${t('galleryHint')}</span></div><button class="gallery-main" data-enlarge aria-label="${t('enlarge')}"><img data-shared-image src="${first.image}"${responsiveImageAttrs(first.image,first.width,'(max-width: 720px) calc(100vw - 36px), (max-width: 1190px) calc(100vw - 64px), 1126px')} alt="${pick(first.title)}" width="${first.width}" height="${first.height}" decoding="async"></button><div class="gallery-thumbnails" aria-label="${t('gallery')}">${project.gallery.map((shot,index)=>`<button data-shot="${index}" aria-pressed="${index===0}" aria-label="${pick(shot.title)}"><img src="${shot.image.replace(/\.webp$/,'-thumb.webp')}" alt="" width="360" height="203" loading="lazy" decoding="async"><span>${pick(shot.title)}</span></button>`).join('')}</div></section>`;
+ return `<section class="case-showcase product-gallery reveal" data-gallery="${project.id}"><div class="gallery-heading">${label(t('gallery'))}<span class="muted">${t('galleryHint')}</span></div><button class="gallery-main" data-enlarge aria-label="${t('enlarge')}"><img data-shared-image src="${first.image}"${responsiveImageAttrs(first.image,first.width,'(max-width: 720px) calc(100vw - 36px), (max-width: 1190px) calc(100vw - 64px), 1126px')} alt="${pick(first.title)}" width="${first.width}" height="${first.height}" decoding="async"></button><div class="gallery-thumbnails" aria-label="${t('gallery')}">${project.gallery.map((shot,index)=>`<button data-shot="${index}" aria-pressed="${index===0}" aria-label="${pick(shot.title)}">${galleryThumbnail(shot)}<span>${pick(shot.title)}</span></button>`).join('')}</div></section>`;
 }
 function caseHeroVisual(project) {
  const shot=project.gallery?.[0];

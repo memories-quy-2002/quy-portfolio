@@ -51,20 +51,20 @@ const experienceData = [
  {company:'TMA Solutions',initial:'T',logo:'/assets/logos/tma-solutions.svg',contribution:true,stage:['Frontend foundation','Nền tảng giao diện'],title:['Front-end Developer Intern','Thực tập sinh phát triển giao diện'],dates:['Sep 2023 - Dec 2023 · Internship','09/2023 - 12/2023 · Thực tập'],description:['Built and maintained responsive React interfaces, refining existing application pages for different screen sizes.','Xây dựng và bảo trì giao diện React responsive, cải thiện các trang ứng dụng hiện có trên nhiều kích thước màn hình.'],points:[['Resolved frontend defects and contributed to page-load performance and accessibility improvements.','Used Git for version control while working on existing application pages.'],['Sửa lỗi frontend và đóng góp cải thiện hiệu năng tải trang, khả năng truy cập.','Sử dụng Git để quản lý phiên bản khi làm việc trên các trang ứng dụng hiện có.']],tags:['React','Responsive UI','Git','Accessibility']}
 ];
 
-/** Only real production captures are used in the product gallery. */
+/** Digital E uses production captures; Food Recipes uses a privacy-redacted local demo. */
 projectData[0].image='/assets/digital-home.webp';
 projectData[0].gallery=[
- {image:'/assets/digital-home.webp',title:['Storefront','Cửa hàng'],caption:['Production storefront · Product discovery and featured products.','Cửa hàng trực tuyến · Khám phá sản phẩm và sản phẩm nổi bật.'],width:1348,height:926},
- {image:'/assets/digital-catalog.webp',title:['Product discovery','Tìm kiếm sản phẩm'],caption:['Production catalog · Search, filters, sorting, and comparison entry points.','Danh mục trực tuyến · Tìm kiếm, lọc, sắp xếp và lựa chọn so sánh.'],width:1348,height:926},
- {image:'/assets/digital-product.webp',title:['Product detail','Chi tiết sản phẩm'],caption:['Production product detail · Specifications, stock, and purchase controls.','Chi tiết sản phẩm trực tuyến · Thông số, tồn kho và thao tác mua hàng.'],width:1348,height:926}
+ {image:'/assets/digital-home.webp',title:['Storefront','Cửa hàng'],caption:['Production storefront · Brand-led landing page, featured gear, and direct paths into the catalog.','Cửa hàng production · Trang chủ nhận diện thương hiệu, sản phẩm nổi bật và lối vào danh mục.'],width:1348,height:926},
+ {image:'/assets/digital-catalog.webp',title:['Product discovery','Tìm kiếm sản phẩm'],caption:['Production catalog · Search, category and brand filters, sorting, comparison, and cart actions.','Danh mục production · Tìm kiếm, lọc theo danh mục và thương hiệu, sắp xếp, so sánh và thêm giỏ.'],width:1348,height:926},
+ {image:'/assets/digital-product.webp',title:['Product detail','Chi tiết sản phẩm'],caption:['Production product detail · Product imagery, pricing, stock, quantity selection, and purchase controls.','Trang chi tiết production · Hình sản phẩm, giá, tồn kho, chọn số lượng và thao tác mua.'],width:1348,height:926}
 ];
 projectData[1].image='/assets/food-discovery.webp';
-projectData[1].imageAlt=['Food Recipes production recipe discovery screen','Màn hình khám phá công thức Food Recipes đang hoạt động'];
+projectData[1].imageAlt=['Food Recipes demo dashboard with featured meals and kitchen activity','Bảng điều khiển Food Recipes demo với bữa ăn nổi bật và hoạt động bếp'];
 projectData[1].gallery=[
- {image:'/assets/food-discovery.webp',title:['Recipe Discovery','Khám phá công thức'],caption:['Production homepage · Breakfast discovery carousel with featured meals.','Trang chủ production · Carousel khám phá bữa sáng với các món ăn nổi bật.'],width:1680,height:757},
- {image:'/assets/food-recipe-detail.webp',title:['Recipe Details','Chi tiết công thức'],caption:['Production recipe page · Banana Oat Pancakes with rating, preparation details, and cooking actions.','Trang công thức production · Banana Oat Pancakes với đánh giá, thông tin chuẩn bị và thao tác nấu.'],width:1680,height:758},
- {image:'/assets/food-pantry.webp',title:['Pantry-first cooking','Nấu từ nguyên liệu sẵn có'],caption:['Production pantry entry · Add ingredients you already have and start finding matching recipes.','Luồng kho bếp production · Thêm nguyên liệu sẵn có để bắt đầu tìm công thức phù hợp.'],width:1268,height:338},
- {image:'/assets/food-recipes.webp',title:['Account Access','Truy cập tài khoản'],caption:['Production account screen · Sign-in interface.','Màn hình tài khoản đang hoạt động · Giao diện đăng nhập.'],width:1440,height:1000}
+ {image:'/assets/food-discovery.webp',title:['Kitchen Dashboard','Bảng điều khiển bếp'],caption:['Local demo · Explore featured meals and pick up an active cooking session from the kitchen dashboard.','Bản demo local · Khám phá bữa ăn nổi bật và tiếp tục phiên nấu ăn từ bảng điều khiển bếp.'],width:2880,height:2000},
+ {image:'/assets/food-recipe-detail.webp',title:['Recipe Details','Chi tiết công thức'],caption:['Local demo · Recipe ratings, servings, ingredient checklist, and cooking actions.','Bản demo local · Đánh giá, khẩu phần, danh sách nguyên liệu và thao tác nấu.'],width:2880,height:2000},
+ {image:'/assets/food-pantry.webp',title:['Pantry Management','Quản lý kho bếp'],caption:['Local demo · Track ingredients on hand and see what needs restocking.','Bản demo local · Theo dõi nguyên liệu sẵn có và những món cần mua thêm.'],width:2880,height:2000},
+ {image:'/assets/food-recipes.webp',title:['Meal Planning','Lập kế hoạch bữa ăn'],caption:['Local demo · Weekly calendar connected to recipes and a shopping list.','Bản demo local · Lịch bữa ăn tuần kết nối với công thức và danh sách mua sắm.'],width:2880,height:2000}
 ];
 projectData[2].image='/assets/ecoffee-customer.webp';
 projectData[2].imageAlt=['eCoffee customer storefront showing product details and recommendations','Giao diện khách hàng eCoffee với chi tiết món và gợi ý sản phẩm'];
