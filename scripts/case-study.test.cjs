@@ -148,7 +148,7 @@ test('all case-study technology chips include a local logo', () => {
 test('Digital E and Food Recipes show the requested case-study technology stacks', () => {
   const expected = {
     'case-studies/digital-e-shop': ['React', 'NestJS', 'MySQL', 'TypeScript', 'Prisma', 'Firebase', 'Tailwind CSS', 'Docker', 'Vercel', 'Cloudflare Workers'],
-    'case-studies/food-recipes': ['React', 'TypeScript', 'NestJS', 'PostgreSQL', 'Prisma', 'Redux Toolkit', 'TanStack Query', 'Tailwind CSS', 'Docker', 'Playwright'],
+    'case-studies/food-recipes': ['React', 'NestJS', 'PostgreSQL', 'TypeScript', 'Prisma', 'Redux Toolkit', 'TanStack Query', 'Tailwind CSS', 'Docker', 'Playwright'],
   };
 
   for (const [route, technologies] of Object.entries(expected)) {
