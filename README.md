@@ -63,3 +63,11 @@ Fragment history within a case study preserves the mounted page and bypasses pag
 ## Profile refresh · 5 October 2026
 
 Experience dates, role titles, education timeline, GPA, and credentials reflect the owner-provided LinkedIn profile text. Unknown personal contact information is omitted. The downloadable CV uses the same verified dates. Digital-E's profile summary and technology list follow the owner-provided LinkedIn project entry.
+
+## SEO and two active domains
+
+Both `https://nguyenquyportfolio.vercel.app` and `https://www.nguyenmanhphuquy.info` should remain accessible on the **same Vercel project**. There is intentionally **no redirect** from the Vercel hostname to the custom hostname. The custom hostname is the canonical URL for search engines; serving the same content from both hosts without a redirect is expected, and Google may choose to index only the canonical address.
+
+The static builder generates per-route EN/VI titles, descriptions, canonical and reciprocal hreflang links, Open Graph/Twitter tags, `sitemap.xml`, `robots.txt`, and a Person JSON-LD schema. The generated `seo.js` manifest keeps metadata in sync when client navigation uses `history.pushState`. Update the `siteUrl` constant in `scripts/build-pages.cjs` if the primary SEO domain ever changes.
+
+Run `pnpm check` for SEO regression coverage. After deployment, verify `/robots.txt`, `/sitemap.xml`, and the English/Vietnamese routes on both hosts. Add the custom domain in Google Search Console, verify ownership and submit `https://www.nguyenmanhphuquy.info/sitemap.xml`. DNS and Search Console setup are external steps, not controlled by repository code.

@@ -5,6 +5,9 @@ const path = require('node:path');
 const vm = require('node:vm');
 const root = path.resolve(__dirname, '..');
 const outputDirectory = path.join(root, 'dist');
+// Both hosts stay reachable; search engines should prefer the custom domain.
+const siteUrl = 'https://www.nguyenmanhphuquy.info';
+const pageSeoData = Object.create(null);
 const sourceDirectory = path.join(root, 'src');
 const publicDirectory = path.join(root, 'public');
 const rendererFiles = ['content.js', path.join('client', 'app.js')];
@@ -48,12 +51,54 @@ const vietnamesePageDescriptions = {
   '/case-studies/ecoffee/': 'Case study eCoffee: nền tảng chuỗi cà phê đa vai trò cho khách hàng, cửa hàng, giao hàng và quản lý tồn kho.',
   [notFoundRoute]: 'Không tìm thấy trang trong portfolio kỹ sư phần mềm của Nguyễn Mạnh Phú Quý.',
 };
+const seoTitles = {
+  "/": [
+    "Nguyễn Mạnh Phú Quý | Software Engineer & Full-stack Developer",
+    "Nguyễn Mạnh Phú Quý | Kỹ sư phần mềm Full-stack"
+  ],
+  "/projects/": [
+    "Software Engineering Projects | Nguyễn Mạnh Phú Quý",
+    "Dự án phần mềm | Nguyễn Mạnh Phú Quý"
+  ],
+  "/tech-stack/": [
+    "Technology Stack | Nguyễn Mạnh Phú Quý",
+    "Công nghệ sử dụng | Nguyễn Mạnh Phú Quý"
+  ],
+  "/experience/": [
+    "Professional Experience | Nguyễn Mạnh Phú Quý",
+    "Kinh nghiệm làm việc | Nguyễn Mạnh Phú Quý"
+  ],
+  "/education/": [
+    "Education & Certifications | Nguyễn Mạnh Phú Quý",
+    "Học vấn và chứng chỉ | Nguyễn Mạnh Phú Quý"
+  ],
+  "/contact/": [
+    "Contact Nguyễn Mạnh Phú Quý | Software Engineer",
+    "Liên hệ Nguyễn Mạnh Phú Quý | Kỹ sư phần mềm"
+  ],
+  "/case-studies/digital-e-shop/": [
+    "Digital-E Shop | Full-stack E-commerce Case Study",
+    "Digital-E Shop | Case Study thương mại điện tử"
+  ],
+  "/case-studies/food-recipes/": [
+    "Food Recipes | React & NestJS Engineering Case Study",
+    "Food Recipes | Case Study React và NestJS"
+  ],
+  "/case-studies/ecoffee/": [
+    "eCoffee | NestJS Microservices & Kafka Case Study",
+    "eCoffee | Case Study Microservices và Kafka"
+  ]
+};
 const personSchema = {
   '@context': 'https://schema.org',
   '@type': 'Person',
+  '@id': `${siteUrl}/#person`,
   name: 'Nguyễn Mạnh Phú Quý',
+  alternateName: 'Nguyen Manh Phu Quy',
+  url: `${siteUrl}/`,
   jobTitle: 'Software Engineer',
-  worksFor: { '@type': 'Organization', name: 'FPT Software' },
+  description: 'Software engineer specializing in React, TypeScript, NestJS and full-stack web applications.',
+  knowsAbout: ['Software Engineering', 'TypeScript', 'React', 'NestJS', 'SQL', 'Microservices'],
   alumniOf: {
     '@type': 'CollegeOrUniversity',
     name: 'Ho Chi Minh City University of Technology',
@@ -108,13 +153,13 @@ function renderPage(route, contentRoute = route, language = 'en') {
   const pageDescription = descriptions[contentRoute] || descriptions[notFoundRoute];
   const pageTitle = route === notFoundRoute
     ? 'Page not found · Nguyễn Mạnh Phú Quý'
-    : document.title;
+    : (seoTitles[contentRoute]?.[language === 'vi' ? 1 : 0] || document.title);
 
   const fontStylesheet = 'https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;display=swap';
   const fontStylesheetLink = `<link rel="preload" href="${fontStylesheet}" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="${fontStylesheet}"></noscript>`;
   const robots = route === notFoundRoute ? 'noindex,follow' : 'index,follow';
   const socialType = contentRoute.startsWith('/case-studies/') ? 'article' : 'website';
-  const baseUrl = 'https://nguyenquyportfolio.vercel.app';
+  const baseUrl = siteUrl;
   const canonicalUrl = `${baseUrl}${route === notFoundRoute ? '/' : route}`;
   const canonicalMetadata = route === notFoundRoute ? '' : `<link rel="canonical" href="${canonicalUrl}">`;
   const socialUrlMetadata = route === notFoundRoute ? '' : `<meta property="og:url" content="${canonicalUrl}">`;
@@ -145,10 +190,27 @@ function renderPage(route, contentRoute = route, language = 'en') {
   const socialImageUrl = `${baseUrl}${socialImage.src}`;
   const socialImageMetadata = `${socialUrlMetadata}<meta property="og:image" content="${socialImageUrl}"><meta property="og:image:type" content="image/webp"><meta property="og:image:alt" content="${socialImage.alt[language === 'vi' ? 1 : 0]}">`;
   const structuredData = contentRoute === '/'
-    ? `<script type="application/ld+json">${JSON.stringify(personSchema)}</script>`
+    ? `<script id="portfolio-person-schema" type="application/ld+json">${JSON.stringify(personSchema)}</script>`
     : '';
 
-  return `<!doctype html>\n<html lang="${language}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b1422"><meta name="author" content="Nguyễn Mạnh Phú Quý"><meta name="robots" content="${robots}"><meta name="description" content="${pageDescription}">${canonicalMetadata}${alternateMetadata}<meta property="og:type" content="${socialType}"><meta property="og:locale" content="${language === 'vi' ? 'vi_VN' : 'en_US'}"><meta property="og:title" content="${pageTitle}"><meta property="og:description" content="${pageDescription}">${socialImageMetadata}<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${pageTitle}"><meta name="twitter:description" content="${pageDescription}"><meta name="twitter:image" content="${socialImageUrl}">${structuredData}<script>try{const savedTheme=localStorage.getItem('portfolio-theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme;}catch{}</script><title>${pageTitle}</title><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>${fontStylesheetLink}<link rel="stylesheet" href="/styles.css?v=46"><link rel="stylesheet" href="/expressive.css?v=59"><script src="/content.js?v=48" defer></script><script src="/motion.js?v=49" defer></script><script src="/app.js?v=52" defer></script></head><body><a class="skip-link" href="#main">Skip to main content</a><header id="header">${elements.header.innerHTML}</header><main id="main" class="page-shell" tabindex="-1">${elements.main.innerHTML}</main><footer id="footer">${elements.footer.innerHTML}</footer><button id="back-to-top" class="back-to-top" type="button" aria-label="${language === 'vi' ? 'Lên đầu trang' : 'Back to top'}" title="${language === 'vi' ? 'Lên đầu trang' : 'Back to top'}"><span class="icon" style="--icon:url('/assets/icons/move-up-right.svg')" aria-hidden="true"></span></button></body></html>\n`;
+  pageSeoData[route] = {
+    title: pageTitle,
+    description: pageDescription,
+    robots,
+    canonicalUrl: route === notFoundRoute ? null : canonicalUrl,
+    alternates: route === notFoundRoute ? null : {
+      en: `${baseUrl}${contentRoute}`,
+      'vi-VN': `${baseUrl}${vietnameseRoute}`,
+      'x-default': `${baseUrl}${contentRoute}`,
+    },
+    socialType,
+    locale: language === 'vi' ? 'vi_VN' : 'en_US',
+    imageUrl: socialImageUrl,
+    imageAlt: socialImage.alt[language === 'vi' ? 1 : 0],
+    person: contentRoute === '/' && route !== notFoundRoute ? personSchema : null,
+  };
+
+  return `<!doctype html>\n<html lang="${language}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b1422"><meta name="author" content="Nguyễn Mạnh Phú Quý"><meta name="robots" content="${robots}"><meta name="description" content="${pageDescription}">${canonicalMetadata}${alternateMetadata}<meta property="og:site_name" content="Nguyễn Mạnh Phú Quý"><meta property="og:type" content="${socialType}"><meta property="og:locale" content="${language === 'vi' ? 'vi_VN' : 'en_US'}"><meta property="og:title" content="${pageTitle}"><meta property="og:description" content="${pageDescription}">${socialImageMetadata}<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${pageTitle}"><meta name="twitter:description" content="${pageDescription}"><meta name="twitter:image" content="${socialImageUrl}">${structuredData}<script>try{const savedTheme=localStorage.getItem('portfolio-theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme;}catch{}</script><title>${pageTitle}</title><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>${fontStylesheetLink}<link rel="stylesheet" href="/styles.css?v=46"><link rel="stylesheet" href="/expressive.css?v=59"><script src="/content.js?v=48" defer></script><script src="/seo.js?v=1" defer></script><script src="/motion.js?v=49" defer></script><script src="/app.js?v=52" defer></script></head><body><a class="skip-link" href="#main">Skip to main content</a><header id="header">${elements.header.innerHTML}</header><main id="main" class="page-shell" tabindex="-1">${elements.main.innerHTML}</main><footer id="footer">${elements.footer.innerHTML}</footer><button id="back-to-top" class="back-to-top" type="button" aria-label="${language === 'vi' ? 'Lên đầu trang' : 'Back to top'}" title="${language === 'vi' ? 'Lên đầu trang' : 'Back to top'}"><span class="icon" style="--icon:url('/assets/icons/move-up-right.svg')" aria-hidden="true"></span></button></body></html>\n`;
 }
 
 function writePage(route, contentRoute = route, language = 'en') {
@@ -183,14 +245,16 @@ for (const route of routes) {
   writePage(`/vi${route}`, route, 'vi');
 }
 writePage(notFoundRoute, notFoundRoute, 'en');
+// Generated metadata for syncing <head> during enhanced client-side navigation.
+fs.writeFileSync(path.join(outputDirectory, 'seo.js'), `window.PortfolioSeo = Object.freeze(${JSON.stringify(pageSeoData)});\n`);
 
 const sitemap = routes.map(route => {
-  const englishUrl = `https://nguyenquyportfolio.vercel.app${route}`;
-  const vietnameseUrl = `https://nguyenquyportfolio.vercel.app/vi${route}`;
+  const englishUrl = `${siteUrl}${route}`;
+  const vietnameseUrl = `${siteUrl}/vi${route}`;
   return `<url><loc>${englishUrl}</loc><xhtml:link rel="alternate" hreflang="en" href="${englishUrl}"/><xhtml:link rel="alternate" hreflang="vi-VN" href="${vietnameseUrl}"/><xhtml:link rel="alternate" hreflang="x-default" href="${englishUrl}"/></url><url><loc>${vietnameseUrl}</loc><xhtml:link rel="alternate" hreflang="en" href="${englishUrl}"/><xhtml:link rel="alternate" hreflang="vi-VN" href="${vietnameseUrl}"/><xhtml:link rel="alternate" hreflang="x-default" href="${englishUrl}"/></url>`;
 }).join('');
 fs.writeFileSync(path.join(outputDirectory, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${sitemap}</urlset>\n`);
-fs.writeFileSync(path.join(outputDirectory, 'robots.txt'), 'User-agent: *\nAllow: /\nSitemap: https://nguyenquyportfolio.vercel.app/sitemap.xml\n');
+fs.writeFileSync(path.join(outputDirectory, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${siteUrl}/sitemap.xml\n`);
 
 console.log(`Generated ${routes.length * 2} localized portfolio pages, sitemap, robots.txt, and a 404 page.`);
 
