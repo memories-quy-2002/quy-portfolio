@@ -100,7 +100,7 @@ test('case studies link to the next project and Engineering Notes is removed', (
   assert.doesNotMatch(app, /engineeringNotes|engineering-notes/);
   assert.equal(fs.existsSync(path.join(root, 'dist', 'engineering-notes')), false);
   const stack = page('tech-stack');
-  assert.doesNotMatch(stack, /gRPC/);
+  assert.match(stack, /gRPC/);
   assert.match(page('experience'), /CT Group Hi-Tech/);
 });
 
@@ -147,7 +147,7 @@ test('all case-study technology chips include a local logo', () => {
 
 test('Digital E and Food Recipes show the requested case-study technology stacks', () => {
   const expected = {
-    'case-studies/digital-e-shop': ['React', 'TypeScript', 'NestJS', 'MySQL', 'Prisma', 'Firebase', 'Tailwind CSS', 'Docker', 'Vercel', 'Cloudflare Workers'],
+    'case-studies/digital-e-shop': ['React', 'NestJS', 'MySQL', 'TypeScript', 'Prisma', 'Firebase', 'Tailwind CSS', 'Docker', 'Vercel', 'Cloudflare Workers'],
     'case-studies/food-recipes': ['React', 'TypeScript', 'NestJS', 'PostgreSQL', 'Prisma', 'Redux Toolkit', 'TanStack Query', 'Tailwind CSS', 'Docker', 'Playwright'],
   };
 
@@ -240,7 +240,7 @@ test('Experience cards use even timeline spacing and relevant icons', () => {
   assert.match(css, /height:calc\(100% \+ var\(--experience-gap\)\)/);
   assert.equal((html.match(/class="experience-card reveal"/g) || []).length, 3);
   assert.doesNotMatch(html, /Career break|Professional development/);
-  assert.match(html, /data-tag="ReactJS"[^>]*>[\s\S]*?assets\/logos\/react\.svg/);
+  assert.match(html, /data-tag="React"[^>]*>[\s\S]*?assets\/logos\/react\.svg/);
   assert.match(html, /data-tag="Git"[^>]*>[\s\S]*?assets\/icons\/code-xml\.svg/);
   for (const iconName of ['cpu', 'layers', 'code-xml', 'book-open', 'move-up-right', 'monitor']) {
     assert.ok(fs.existsSync(path.join(root, 'dist', 'assets', 'icons', `${iconName}.svg`)), iconName);
@@ -285,18 +285,16 @@ test('Theme toggle is available on every route and persists the selected theme',
   assert.doesNotMatch(css, /engineering-note|note-summary/);
 });
 
-test('home hero uses the optimized transparent sculpture cutout', () => {
+test('home hero renders the interactive orbital systems visualization', () => {
+  const home = page('/');
   const app = fs.readFileSync(path.join(root, 'dist', 'app.js'), 'utf8');
-  const motion = fs.readFileSync(path.join(root, 'dist', 'motion.js'), 'utf8');
-  const css = fs.readFileSync(path.join(root, 'dist', 'expressive.css'), 'utf8');
-  assert.match(app, /hero-ring-cutout-1536\.webp/);
-  assert.match(app, /hero-ring-cutout-640\.webp/);
-  assert.match(motion, /hero-ring-cutout-1536\.webp/);
-  for (const size of [640, 960, 1280, 1536]) {
-    assert.ok(fs.existsSync(path.join(root, 'dist', 'assets', `hero-ring-cutout-${size}.webp`)));
+  assert.match(home, /data-system-visual/);
+  assert.match(home, /class="system-core"/);
+  assert.match(home, /\/assets\/hero\/orbit\/core\.webp/);
+  assert.match(app, /data-system-node/);
+  for (const asset of ['core', 'cloud', 'code', 'database', 'events', 'gear', 'server']) {
+    assert.ok(fs.existsSync(path.join(root, 'dist', 'assets', 'hero', 'orbit', asset + '.webp')), asset);
   }
-  assert.match(css, /\.hero-art \.sculpture-control img\{[^}]*mask-image:none/);
-  assert.match(css, /\.hero-art:before\{[^}]*radial-gradient/);
 });
 
 test('light navigation and case-study feature cards use light surfaces with dark text', () => {
