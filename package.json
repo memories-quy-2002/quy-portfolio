@@ -7,8 +7,8 @@
     "dev": "node scripts/build-pages.cjs && vite dist",
     "preview": "vite preview --outDir dist",
     "build": "node scripts/build-pages.cjs",
-    "test": "node --test scripts/case-study.test.cjs",
-    "test:watch": "node --test --watch scripts/case-study.test.cjs",
+    "test": "node --test --test-concurrency=1 scripts/case-study.test.cjs scripts/seo.test.cjs",
+    "test:watch": "node --test --watch --test-concurrency=1 scripts/case-study.test.cjs scripts/seo.test.cjs",
     "lint": "node scripts/lint.cjs",
     "typecheck": "node scripts/typecheck.cjs",
     "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build"

@@ -33,7 +33,7 @@ test('case-study pages publish a project-specific social preview image', () => {
   };
 
   for (const [route, image] of Object.entries(expectedImages)) {
-    assert.match(page(route), new RegExp(`<meta property="og:image" content="https://nguyenquyportfolio\\.vercel\\.app${image.replaceAll('/', '\\/')}"`));
+    assert.match(page(route), new RegExp(`<meta property="og:image" content="https://www\\.nguyenmanhphuquy\\.info${image.replaceAll('/', '\\/')}"`));
   }
 });
 
@@ -57,7 +57,7 @@ test('every indexable page publishes one matching Open Graph and Twitter preview
     assert.equal(openGraphImages.length, 1, `${route || '/'} should publish one og:image`);
     assert.equal(twitterImages.length, 1, `${route || '/'} should publish one twitter:image`);
     assert.equal(twitterImages[0], openGraphImages[0], `${route || '/'} should use the same image for both platforms`);
-    assert.match(openGraphImages[0], /^https:\/\/nguyenquyportfolio\.vercel\.app\/assets\//, `${route || '/'} should use an absolute production image URL`);
+    assert.match(openGraphImages[0], /^https:\/\/www\.nguyenmanhphuquy\.info\/assets\//, `${route || '/'} should use an absolute production image URL`);
     const assetPath = new URL(openGraphImages[0]).pathname.slice(1).split('/').join(path.sep);
     assert.ok(fs.existsSync(path.join(root, 'dist', assetPath)), `${route || '/'} should point to a generated image asset`);
   }
@@ -76,8 +76,8 @@ test('case study introductions show a project screenshot before the facts row', 
     assert.ok(heading, `${route} should render a case heading`);
     assert.match(heading, /class="case-hero-visual"/, `${route} should render its hero visual`);
     assert.ok(heading.indexOf(image) < heading.indexOf('class="case-facts"'), `${route} should show its visual before project facts`);
-    assert.match(html, /expressive\.css\?v=48/, `${route} should load the updated visual stylesheet`);
-    assert.match(html, /app\.js\?v=46/, `${route} should load the updated page renderer`);
+    assert.match(html, /expressive\.css\?v=59/, `${route} should load the updated visual stylesheet`);
+    assert.match(html, /app\.js\?v=52/, `${route} should load the updated page renderer`);
   }
 });
 
@@ -206,7 +206,7 @@ test('header and footer present the updated personal brand consistently', () => 
   assert.match(home, /class="brand-label">Phú Quý<\/span>/);
   assert.match(home, /class="footer-full-name">Nguyễn Mạnh Phú Quý<\/span>/);
   assert.match(home, /© 2026 Nguyễn Mạnh Phú Quý/);
-  assert.match(home, /<title>Software Engineer · Nguyễn Mạnh Phú Quý<\/title>/);
+  assert.match(home, /<title>Nguyễn Mạnh Phú Quý \| Software Engineer & Full-stack Developer<\/title>/);
   assert.doesNotMatch(home, /quý<span>\.dev|Quý Nguyễn/);
 });
 
@@ -255,7 +255,7 @@ test('Footer has clear navigation, social links, and a back-to-top action', () =
   assert.match(html, /linkedin\.com\/in\/memories2002/);
   assert.match(html, /github\.com\/memories-quy-2002/);
   assert.match(html, /<button id="back-to-top" class="back-to-top"[^>]*aria-label="Back to top"/);
-  assert.match(html, /expressive\.css\?v=48/);
+  assert.match(html, /expressive\.css\?v=59/);
   const css = fs.readFileSync(path.join(root, 'dist', 'expressive.css'), 'utf8');
   assert.match(css, /footer-social a:first-child img\{filter:none\}/);
 });
@@ -265,7 +265,7 @@ test('Theme toggle is available on every route and persists the selected theme',
     const html = page(route);
     assert.match(html, /data-theme-toggle/);
     assert.match(html, /portfolio-theme/);
-    assert.match(html, /expressive\.css\?v=48/);
+    assert.match(html, /expressive\.css\?v=59/);
   }
   const app = fs.readFileSync(path.join(root, 'dist', 'app.js'), 'utf8');
   const home = page('/');
