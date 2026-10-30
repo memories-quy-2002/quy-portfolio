@@ -1,1 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#0b1422"/><text x="7" y="24" fill="#74e8d1" font-family="Arial" font-size="25" font-weight="bold">q</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">Phú Quý — PQ monogram</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#142B3B"/>
+      <stop offset="1" stop-color="#081420"/>
+    </linearGradient>
+    <linearGradient id="aqua" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#B6FFF0"/>
+      <stop offset="1" stop-color="#54DDBF"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="62" height="62" rx="16" fill="url(#bg)"/>
+  <rect x="1.6" y="1.6" width="60.8" height="60.8" rx="15.4" fill="none" stroke="#B5FCEB" stroke-opacity=".18" stroke-width="1.2"/>
+  <path d="M16.5 47 V18.5 H28 C35.2 18.5 38.5 22.3 38.5 28.5 C38.5 34.5 34.4 38 27.6 38 H16.5" fill="none" stroke="#F6FFFD" stroke-width="6.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="42.6" cy="36.4" r="11.3" fill="#0D2430" stroke="url(#aqua)" stroke-width="6"/>
+  <path d="M49.4 44.8 L54 49.4" fill="none" stroke="#76F3D3" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="52.5" cy="14" r="2" fill="#7CECD5" opacity=".85"/>
+</svg>
