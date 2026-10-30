@@ -410,7 +410,7 @@ html[data-theme="light"] .footer-links a:hover,html[data-theme="light"] .footer-
 .footer-main{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(145px,.7fr) minmax(170px,.75fr);gap:clamp(30px,7vw,100px);padding-bottom:42px}
 .footer-brand .brand{display:inline-flex;font-size:1.65rem}
 .brand{display:inline-flex;align-items:center;gap:10px;min-height:44px;color:var(--ink);font-size:1rem;letter-spacing:0}
-.brand-mark{display:grid;place-items:center;width:34px;height:34px;flex:none;border:1px solid #72d9c355;border-radius:10px;background:linear-gradient(145deg,#72d9c31c,#72d9c308);color:var(--accent)!important;font:700 .7rem/1 var(--font-display);letter-spacing:-.04em}
+.brand-mark{display:block;width:34px;height:34px;flex:none;object-fit:contain;border:0;border-radius:10px;background:none}
 .brand-label{color:var(--ink)!important;font-size:1.12rem;font-weight:650;line-height:1;letter-spacing:-.035em}
 .footer-brand .brand{font-size:1.65rem}
 .footer-full-name{display:block;margin:13px 0 0;color:var(--ink);font-size:.92rem;font-weight:600;letter-spacing:-.01em}

@@ -202,7 +202,10 @@ test('Experience uses the supplied CT Group Hi-Tech and TMA logos', () => {
 test('header and footer present the updated personal brand consistently', () => {
   const home = page('');
   assert.match(home, /aria-label="Nguyễn Mạnh Phú Quý"/);
-  assert.match(home, /class="brand-mark" aria-hidden="true">PQ<\/span>/);
+  assert.equal(home.split('class="brand-mark" src="/favicon.svg?v=2"').length - 1, 2);
+  assert.ok(home.includes('<link rel="icon" href="/favicon.svg?v=2" sizes="any" type="image/svg+xml">'));
+  const favicon = fs.readFileSync(path.join(root, 'dist', 'favicon.svg'), 'utf8');
+  assert.match(favicon, /Phú Quý — PQ monogram/);
   assert.match(home, /class="brand-label">Phú Quý<\/span>/);
   assert.match(home, /class="footer-full-name">Nguyễn Mạnh Phú Quý<\/span>/);
   assert.match(home, /© 2026 Nguyễn Mạnh Phú Quý/);
