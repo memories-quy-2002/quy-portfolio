@@ -38,6 +38,40 @@ const localizePath = (path,targetLanguage=language) => {
  const normalized=contentPath(path);
  return targetLanguage==='vi'?`/vi${normalized}`:normalized;
 };
+function syncSeoMetadata() {
+  // Static HTML already contains correct metadata; synchronize after pushState.
+  if (!document.head) return;
+  const seo = globalThis.PortfolioSeo?.[routePath(location.pathname)];
+  if (!seo) return;
+  const setMeta = (selector, value) => document.querySelector(selector)?.setAttribute('content', value);
+  const setHref = (selector, value) => document.querySelector(selector)?.setAttribute('href', value);
+  document.title = seo.title;
+  setMeta('meta[name="description"]', seo.description);
+  setMeta('meta[name="robots"]', seo.robots);
+  if (seo.canonicalUrl) setHref('link[rel="canonical"]', seo.canonicalUrl);
+  for (const [lang, url] of Object.entries(seo.alternates || {})) {
+    setHref(`link[rel="alternate"][hreflang="${lang}"]`, url);
+  }
+  setMeta('meta[property="og:type"]', seo.socialType);
+  setMeta('meta[property="og:locale"]', seo.locale);
+  setMeta('meta[property="og:title"]', seo.title);
+  setMeta('meta[property="og:description"]', seo.description);
+  if (seo.canonicalUrl) setMeta('meta[property="og:url"]', seo.canonicalUrl);
+  setMeta('meta[property="og:image"]', seo.imageUrl);
+  setMeta('meta[property="og:image:alt"]', seo.imageAlt);
+  setMeta('meta[name="twitter:title"]', seo.title);
+  setMeta('meta[name="twitter:description"]', seo.description);
+  setMeta('meta[name="twitter:image"]', seo.imageUrl);
+  const existing = document.getElementById('portfolio-person-schema');
+  if (!seo.person) existing?.remove();
+  else {
+    const script = existing || document.createElement('script');
+    script.id = 'portfolio-person-schema';
+    script.type = 'application/ld+json';
+    script.textContent = JSON.stringify(seo.person);
+    if (!existing) document.head.appendChild(script);
+  }
+}
 const urlFor = project => localizePath(`/case-studies/${project.id}/`);
 const icon = (name, extra = '') => `<span class="icon ${extra}" style="--icon:url('/assets/icons/${name}.svg')" aria-hidden="true"></span>`;
 const logoMap = {'React':'react','ReactJS':'react','TypeScript':'typescript','Tailwind CSS':'tailwindcss','Vite':'vitejs','Node.js':'nodejs','NestJS':'nestjs','Express':'express','Express.js':'express','PostgreSQL':'postgresql','MySQL':'mysql','Redis':'redis','Kafka':'apachekafka','Docker':'docker','GitHub Actions':'githubactions','Jest / Vitest':'vitest','Playwright / k6':'playwright','Playwright':'playwright','Prisma':'prisma','REST API':'rest','gRPC':'grpc','Firebase':'firebase','Firebase Auth':'firebase','Cloudflare Workers':'cloudflare','PayOS':'payos','Redux Toolkit':'redux','TanStack Query':'reactquery','Vercel':'vercel','Meta':'meta','Coursera':'coursera','IELTS · IDP':'ielts-idp'};
@@ -322,6 +356,7 @@ function renderPage() {
  revealObserver?.disconnect();chapterObserver?.disconnect();
  document.documentElement.lang=language;document.documentElement.dataset.theme=theme;
  document.title=`${route.project?route.project.name:route.key==='home'?t('role'):route.key==='404'?'404':t(route.key)} · Nguyễn Mạnh Phú Quý`;
+ syncSeoMetadata();
  backToTopControl?.setAttribute('aria-label',pick(['Back to top','Lên đầu trang']));
  backToTopControl?.setAttribute('title',pick(['Back to top','Lên đầu trang']));
  document.querySelector('.skip-link').textContent=t('skip');

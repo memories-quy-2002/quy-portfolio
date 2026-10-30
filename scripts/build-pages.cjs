@@ -7,6 +7,7 @@ const root = path.resolve(__dirname, '..');
 const outputDirectory = path.join(root, 'dist');
 // Both hosts stay reachable; search engines should prefer the custom domain.
 const siteUrl = 'https://www.nguyenmanhphuquy.info';
+const pageSeoData = Object.create(null);
 const sourceDirectory = path.join(root, 'src');
 const publicDirectory = path.join(root, 'public');
 const rendererFiles = ['content.js', path.join('client', 'app.js')];
@@ -192,7 +193,24 @@ function renderPage(route, contentRoute = route, language = 'en') {
     ? `<script id="portfolio-person-schema" type="application/ld+json">${JSON.stringify(personSchema)}</script>`
     : '';
 
-  return `<!doctype html>\n<html lang="${language}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b1422"><meta name="author" content="Nguyễn Mạnh Phú Quý"><meta name="robots" content="${robots}"><meta name="description" content="${pageDescription}">${canonicalMetadata}${alternateMetadata}<meta property="og:site_name" content="Nguyễn Mạnh Phú Quý"><meta property="og:type" content="${socialType}"><meta property="og:locale" content="${language === 'vi' ? 'vi_VN' : 'en_US'}"><meta property="og:title" content="${pageTitle}"><meta property="og:description" content="${pageDescription}">${socialImageMetadata}<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${pageTitle}"><meta name="twitter:description" content="${pageDescription}"><meta name="twitter:image" content="${socialImageUrl}">${structuredData}<script>try{const savedTheme=localStorage.getItem('portfolio-theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme;}catch{}</script><title>${pageTitle}</title><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>${fontStylesheetLink}<link rel="stylesheet" href="/styles.css?v=46"><link rel="stylesheet" href="/expressive.css?v=59"><script src="/content.js?v=48" defer></script><script src="/motion.js?v=49" defer></script><script src="/app.js?v=52" defer></script></head><body><a class="skip-link" href="#main">Skip to main content</a><header id="header">${elements.header.innerHTML}</header><main id="main" class="page-shell" tabindex="-1">${elements.main.innerHTML}</main><footer id="footer">${elements.footer.innerHTML}</footer><button id="back-to-top" class="back-to-top" type="button" aria-label="${language === 'vi' ? 'Lên đầu trang' : 'Back to top'}" title="${language === 'vi' ? 'Lên đầu trang' : 'Back to top'}"><span class="icon" style="--icon:url('/assets/icons/move-up-right.svg')" aria-hidden="true"></span></button></body></html>\n`;
+  pageSeoData[route] = {
+    title: pageTitle,
+    description: pageDescription,
+    robots,
+    canonicalUrl: route === notFoundRoute ? null : canonicalUrl,
+    alternates: route === notFoundRoute ? null : {
+      en: `${baseUrl}${contentRoute}`,
+      'vi-VN': `${baseUrl}${vietnameseRoute}`,
+      'x-default': `${baseUrl}${contentRoute}`,
+    },
+    socialType,
+    locale: language === 'vi' ? 'vi_VN' : 'en_US',
+    imageUrl: socialImageUrl,
+    imageAlt: socialImage.alt[language === 'vi' ? 1 : 0],
+    person: contentRoute === '/' && route !== notFoundRoute ? personSchema : null,
+  };
+
+  return `<!doctype html>\n<html lang="${language}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b1422"><meta name="author" content="Nguyễn Mạnh Phú Quý"><meta name="robots" content="${robots}"><meta name="description" content="${pageDescription}">${canonicalMetadata}${alternateMetadata}<meta property="og:site_name" content="Nguyễn Mạnh Phú Quý"><meta property="og:type" content="${socialType}"><meta property="og:locale" content="${language === 'vi' ? 'vi_VN' : 'en_US'}"><meta property="og:title" content="${pageTitle}"><meta property="og:description" content="${pageDescription}">${socialImageMetadata}<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${pageTitle}"><meta name="twitter:description" content="${pageDescription}"><meta name="twitter:image" content="${socialImageUrl}">${structuredData}<script>try{const savedTheme=localStorage.getItem('portfolio-theme');if(savedTheme==='light'||savedTheme==='dark')document.documentElement.dataset.theme=savedTheme;}catch{}</script><title>${pageTitle}</title><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>${fontStylesheetLink}<link rel="stylesheet" href="/styles.css?v=46"><link rel="stylesheet" href="/expressive.css?v=59"><script src="/content.js?v=48" defer></script><script src="/seo.js?v=1" defer></script><script src="/motion.js?v=49" defer></script><script src="/app.js?v=52" defer></script></head><body><a class="skip-link" href="#main">Skip to main content</a><header id="header">${elements.header.innerHTML}</header><main id="main" class="page-shell" tabindex="-1">${elements.main.innerHTML}</main><footer id="footer">${elements.footer.innerHTML}</footer><button id="back-to-top" class="back-to-top" type="button" aria-label="${language === 'vi' ? 'Lên đầu trang' : 'Back to top'}" title="${language === 'vi' ? 'Lên đầu trang' : 'Back to top'}"><span class="icon" style="--icon:url('/assets/icons/move-up-right.svg')" aria-hidden="true"></span></button></body></html>\n`;
 }
 
 function writePage(route, contentRoute = route, language = 'en') {
@@ -227,6 +245,8 @@ for (const route of routes) {
   writePage(`/vi${route}`, route, 'vi');
 }
 writePage(notFoundRoute, notFoundRoute, 'en');
+// Generated metadata for syncing <head> during enhanced client-side navigation.
+fs.writeFileSync(path.join(outputDirectory, 'seo.js'), `window.PortfolioSeo = Object.freeze(${JSON.stringify(pageSeoData)});\n`);
 
 const sitemap = routes.map(route => {
   const englishUrl = `${siteUrl}${route}`;
